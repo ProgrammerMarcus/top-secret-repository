@@ -1,25 +1,50 @@
 <script setup lang="ts">
-import board from "../game"
-
+import { board, pieces } from '../game'
 defineProps<{
   msg: string
 }>()
 </script>
 
 <template>
-  <div class="board" v-for="(tile, index) in board.getGrid()" :key="index">
-    <img :src="tile.image" alt="" class="tile">
+  <div class="board">
+    <img
+      v-for="(tile, index) in board.grid"
+      :src="tile.image"
+      :key="index"
+      alt="Game tile"
+      class="tile"
+      :style="`rotate: ${tile.rotate}deg;`"
+    />
+  </div>
+  <div class="pieces">
+    <img
+      v-for="(piece, index) in pieces"
+      :src="piece.image"
+      :key="index"
+      alt="Game piece"
+      class="piece"
+      style="grid-area: 1 / 1"
+      :style="`grid-area: ${piece.y} / ${piece.x};`"
+    />
   </div>
 </template>
 
 <style scoped>
 .board {
-    background-color: gray;
-    display: grid;
+  position: relative;
+  background-color: gray;
+  display: grid;
+  grid-template: v-bind('`repeat(${board.height}, 96px) / repeat(${board.width}, 96px)`');
+  .tile {
+    height: 100%;
+  }
 }
-@media (min-width: 1024px) {
-.board {
-    background-color: green;
-}
+.pieces {
+  position: absolute;
+  display: grid;
+  grid-template: v-bind('`repeat(${board.height}, 96px) / repeat(${board.width}, 96px)`');
+  .piece {
+    margin: auto;
+  }
 }
 </style>
