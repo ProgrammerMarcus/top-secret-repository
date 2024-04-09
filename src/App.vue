@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import GameBoard from './components/GameBoardDisplay.vue'
+import GameDisplay from './components/GameDisplay.vue'
 </script>
 
 <template>
-  <GameBoard msg="test"></GameBoard>
+  <GameDisplay msg="test"></GameDisplay>
 </template>
 
 <style>

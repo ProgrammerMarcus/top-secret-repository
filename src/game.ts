@@ -3,147 +3,125 @@ import waterCorner from './assets/tiles/tile_water_corner.png'
 import waterMiddle from './assets/tiles/tile_water_middle.png'
 import pawn from './assets/pawn.png'
 
-enum Types {
-  Grass
+export enum Types {
+  Grass,
+  WaterCorner,
+  WaterMiddle
 }
 
-enum Professions {
+export enum Areas {
+  Regular
+}
+
+export enum Professions {
   Pawn
 }
 
-enum Teams {
+export enum Teams {
   White,
   Black
 }
 
-class GameBoard {
-  width
-  height
-  grid: GameTile[]
-  constructor(width: number, height: number, grid: GameTile[]) {
-    this.width = width
-    this.height = height
-    this.grid = grid
-  }
-}
-
-class GameMove {
-  #x
-  #y
-  constructor(x: number, y: number) {
-    this.#x = x
-    this.#y = y
-  }
-  playMove = (board: GameBoard): GameBoard => {
-    return board
-  }
-}
-
 class GameTile {
-  image
   rotate
   type
-  constructor(image: string, rotate: number = 0, type: Types = Types.Grass) {
-    this.image = image
+  area
+  highlight = false
+  board
+  x
+  y
+  image
+  constructor(
+    x: number,
+    y: number,
+    board: GameBoard,
+    type: Types = Types.Grass,
+    area: Areas = Areas.Regular,
+    rotate: number = 0
+  ) {
     this.rotate = rotate
     this.type = type
+    this.board = board
+    this.x = x
+    this.y = y
+    this.area = area
+    if (type === Types.WaterCorner) {
+      this.image = waterCorner
+    } else if (type === Types.WaterMiddle) {
+      this.image = waterMiddle
+    } else {
+      this.image = grass
+    }
   }
 }
 
 class GamePiece {
   team
   profession
-  image
   x
   y
-  constructor(team: Teams, profession: Professions, image: string, x: number, y: number) {
+  image
+  board
+  constructor(
+    x: number,
+    y: number,
+    board: GameBoard,
+    team: Teams = Teams.White,
+    profession: Professions = Professions.Pawn
+  ) {
     this.team = team
-    this.image = image
     this.x = x
     this.y = y
     this.profession = profession
-  }
-  availableMoves = (board: GameTile): GameMove[] => {
-    console.log('unimplemented', board)
-    return []
+    this.image = pawn
+    this.board = board
   }
 }
 
-export const pieces = [new GamePiece(Teams.White, Professions.Pawn, pawn, 1, 2)]
+class GameBoard {
+  width
+  height
+  tiles: GameTile[]
+  pieces: GamePiece[]
+  constructor(width: number, height: number, tiles: GameTile[] = [], pieces: GamePiece[] = []) {
+    this.width = width
+    this.height = height
+    this.tiles = tiles
+    this.pieces = pieces
+  }
+  getTile = (x: number, y: number) => {
+    return this.tiles[x * y - 1]
+  }
+  addTile = (
+    x: number,
+    y: number,
+    type: Types = Types.Grass,
+    area: Areas = Areas.Regular,
+    rotate: number = 0
+  ) => {
+    this.tiles.push(new GameTile(x, y, this, type, area, rotate))
+  }
+  updateTile = (x: number, y: number, tile: GameTile) => {
+    this.tiles[x * y - 1] = tile
+  }
+  getPiece = (x: number, y: number) => {
+    return this.pieces[x * y - 1]
+  }
+  addPiece = (x: number, y: number, team: Teams, profession: Professions) => {
+    this.pieces.push(new GamePiece(x, y, this, team, profession))
+  }
+  removePiece = (x: number, y: number) => {
+    this.pieces = this.pieces.filter((p) => p.x === x && p.y === y)
+  }
 
-export const board = new GameBoard(8, 8, [
-  // 1
-  new GameTile(waterCorner, 90),
-  new GameTile(waterMiddle, 90),
-  new GameTile(waterMiddle, 90),
-  new GameTile(waterMiddle, 90),
-  new GameTile(waterMiddle, 90),
-  new GameTile(waterMiddle, 90),
-  new GameTile(waterMiddle, 90),
-  new GameTile(waterCorner, 180),
-  // 2
-  new GameTile(waterMiddle, 0),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(waterMiddle, 180),
-  // 3
-  new GameTile(waterMiddle, 0),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(waterMiddle, 180),
-  // 4
-  new GameTile(waterMiddle, 0),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(waterMiddle, 180),
-  // 5
-  new GameTile(waterMiddle, 0),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(waterMiddle, 180),
-  // 6
-  new GameTile(waterMiddle, 0),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(waterMiddle, 180),
-  // 7
-  new GameTile(waterMiddle, 0),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(grass),
-  new GameTile(waterMiddle, 180),
-  // 8
-  new GameTile(waterCorner, 0),
-  new GameTile(waterMiddle, 270),
-  new GameTile(waterMiddle, 270),
-  new GameTile(waterMiddle, 270),
-  new GameTile(waterMiddle, 270),
-  new GameTile(waterMiddle, 270),
-  new GameTile(waterMiddle, 270),
-  new GameTile(waterCorner, 270)
-])
+  showMoves = (x: number, y: number): void => {
+    const target = this.getPiece(x, y)
+    if (target.profession === Professions.Pawn) {
+      const updated = this.getTile(target.x, target.y)
+      updated.highlight = true
+      this.updateTile(target.x, target.y, updated)
+    }
+  }
+}
 
-export default board
+export default GameBoard
