@@ -1,7 +1,8 @@
 import grass from './assets/tiles/tile_grass.png'
 import waterCorner from './assets/tiles/tile_water_corner.png'
 import waterMiddle from './assets/tiles/tile_water_middle.png'
-import pawn from './assets/pawn.png'
+import pawnBlack from './assets/pawn_b.png'
+import pawnWhite from './assets/pawn_w.png'
 
 export enum Types {
   Grass,
@@ -73,8 +74,14 @@ export class GamePiece {
     this.x = x
     this.y = y
     this.profession = profession
-    this.image = pawn
     this.board = board
+    if (profession === Professions.Pawn) {
+      if (this.team === Teams.White) {
+        this.image = pawnWhite
+      } else if (this.team === Teams.Black) {
+        this.image = pawnBlack
+      }
+    }
   }
 }
 
@@ -112,7 +119,8 @@ export class GameBoard {
   }
   removePiece = (x: number, y: number) => {
     const index = this.pieces.findIndex((p) => p.x === x && p.y === y)
-    this.pieces = this.pieces.slice(index, index + 1)
+    console.log(this.pieces[index])
+    this.pieces.splice(index, 1)
   }
   resetHighlights = () => {
     for (const h of this.tiles.filter((o) => o.highlight)) {
@@ -122,6 +130,14 @@ export class GameBoard {
   movePiece = (fromX: number, fromY: number, toX: number, toY: number) => {
     const piece = this.getPiece(fromX, fromY)
     if (piece) {
+      const otherPiece = this.getPiece(toX, toY)
+      if (otherPiece) {
+        if (otherPiece.team === piece.team) {
+          return [...this.pieces]
+        } else if (otherPiece.team !== piece.team) {
+          this.removePiece(toX, toY)
+        }
+      }
       piece.x = toX
       piece.y = toY
       this.resetHighlights()
@@ -132,6 +148,7 @@ export class GameBoard {
     }
   }
   showMoves = (x: number, y: number): GameTile[] => {
+    this.resetHighlights()
     const target = this.getPiece(x, y)
     if (target) {
       if (target.profession === Professions.Pawn) {

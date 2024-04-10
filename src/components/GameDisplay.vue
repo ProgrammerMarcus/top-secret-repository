@@ -29,11 +29,18 @@ for (let i = 0; i < 64; i++) {
   }
 }
 
-board.value.addPiece(2, 2, Teams.Black, Professions.Pawn)
+for (let i = 0; i < 8; i++) {
+  board.value.addPiece(i + 1, 4, Teams.Black, Professions.Pawn)
+}
+
+for (let i = 0; i < 8; i++) {
+  board.value.addPiece(i + 1, 6, Teams.White, Professions.Pawn)
+}
 
 const handleMove = (toX: number, toY: number) => {
   if (active && board.value.getTile(toX, toY)?.highlight) {
     board.value.pieces = board.value.movePiece(active.x, active.y, toX, toY)
+    active = undefined
   } else {
     console.log('nope')
   }
@@ -65,7 +72,7 @@ const showMoves = (x: number, y: number) => {
         :key="`${piece.x}, ${piece.y}`"
         alt="Game piece"
         class="piece"
-        :style="`grid-area: ${piece.y} / ${piece.x};`"
+        :style="`grid-area: ${piece.y} / ${piece.x}; ${active ? 'pointer-events: none;' : ''}`"
         @click="showMoves(piece.x, piece.y)"
       />
     </div>
@@ -98,7 +105,6 @@ const showMoves = (x: number, y: number) => {
   grid-template: v-bind('`repeat(${board.height}, 96px) / repeat(${board.width}, 96px)`');
   .piece {
     margin: auto;
-    background-color: red;
     height: 100%;
     pointer-events: all;
   }
