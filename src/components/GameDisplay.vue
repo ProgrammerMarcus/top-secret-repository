@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import GameBoard, { Areas, Professions, Teams, Types } from '../game'
+import GameBoard, { Areas, GamePiece, Professions, Teams, Types } from '../game'
 
 const board = ref(new GameBoard(8, 8))
+let active: undefined | GamePiece = undefined
 
 for (let i = 0; i < 64; i++) {
   const x = Math.floor(i % 8) + 1
@@ -30,41 +31,58 @@ for (let i = 0; i < 64; i++) {
 
 board.value.addPiece(2, 2, Teams.Black, Professions.Pawn)
 
-const handleMove = (fromX: number, fromY: number, toX: number, toY: number) => {
-  board.value.pieces = board.value.movePiece(fromX, fromY, toX, toY)
+const handleMove = (toX: number, toY: number) => {
+  if (active && board.value.getTile(toX, toY)?.highlight) {
+    board.value.pieces = board.value.movePiece(active.x, active.y, toX, toY)
+  } else {
+    console.log('nope')
+  }
+}
+
+const showMoves = (x: number, y: number) => {
+  active = board.value.getPiece(x, y)
+  board.value.tiles = board.value.showMoves(x, y)
 }
 </script>
 
 <template>
-  <div class="tiles">
-    <img
-      v-for="(tile, index) in board.tiles"
-      :src="tile.image"
-      :key="index"
-      alt="Game tile"
-      class="tile"
-      :style="`grid-area: ${tile.y} / ${tile.x}; rotate: ${tile.rotate}deg; ${tile.highlight ? 'filter: brightness(1.5);' : ''}`"
-      @click="console.log(tile.x, tile.y)"
-    />
-  </div>
-  <div class="pieces">
-    <img
-      v-for="piece in board.pieces"
-      :src="piece.image"
-      :key="`${piece.x}, ${piece.y}`"
-      alt="Game piece"
-      class="piece"
-      :style="`grid-area: ${piece.y} / ${piece.x};`"
-      @click="handleMove(piece.x, piece.y, piece.x + 1, piece.y)"
-    />
+  <div class="board">
+    <div class="tiles">
+      <img
+        v-for="(tile, index) in board.tiles"
+        :src="tile.image"
+        :key="index"
+        alt="Game tile"
+        class="tile"
+        :style="`grid-area: ${tile.y} / ${tile.x}; rotate: ${tile.rotate}deg; ${tile.highlight ? 'filter: brightness(1.5);' : ''}`"
+        @click="handleMove(tile.x, tile.y)"
+      />
+    </div>
+    <div class="pieces">
+      <img
+        v-for="piece in board.pieces"
+        :src="piece.image"
+        :key="`${piece.x}, ${piece.y}`"
+        alt="Game piece"
+        class="piece"
+        :style="`grid-area: ${piece.y} / ${piece.x};`"
+        @click="showMoves(piece.x, piece.y)"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped>
-.tiles {
+.board {
   position: relative;
+}
+.tiles {
   background-color: gray;
+  position: absolute;
+  top: 0;
+  left: 0;
   display: grid;
+  place-content: center;
   grid-template: v-bind('`repeat(${board.height}, 96px) / repeat(${board.width}, 96px)`');
   .tile {
     height: 100%;
@@ -75,9 +93,14 @@ const handleMove = (fromX: number, fromY: number, toX: number, toY: number) => {
   top: 0;
   left: 0;
   display: grid;
+  place-content: center;
+  pointer-events: none;
   grid-template: v-bind('`repeat(${board.height}, 96px) / repeat(${board.width}, 96px)`');
   .piece {
     margin: auto;
+    background-color: red;
+    height: 100%;
+    pointer-events: all;
   }
 }
 </style>

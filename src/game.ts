@@ -18,8 +18,8 @@ export enum Professions {
 }
 
 export enum Teams {
-  White,
-  Black
+  White = -1,
+  Black = 1
 }
 
 export class GameTile {
@@ -90,7 +90,7 @@ export class GameBoard {
     this.pieces = pieces
   }
   getTile = (x: number, y: number) => {
-    return this.tiles[x * y - 1]
+    return this.tiles.find((p) => p.x === x && p.y === y)
   }
   addTile = (
     x: number,
@@ -114,29 +114,34 @@ export class GameBoard {
     const index = this.pieces.findIndex((p) => p.x === x && p.y === y)
     this.pieces = this.pieces.slice(index, index + 1)
   }
+  resetHighlights = () => {
+    for (const h of this.tiles.filter((o) => o.highlight)) {
+      h.highlight = false
+    }
+  }
   movePiece = (fromX: number, fromY: number, toX: number, toY: number) => {
     const piece = this.getPiece(fromX, fromY)
     if (piece) {
       piece.x = toX
       piece.y = toY
+      this.resetHighlights()
       return [...this.pieces]
     } else {
       console.error('Piece is undefined, cannot move.')
       return this.pieces
     }
   }
-
-  showMoves = (x: number, y: number): void => {
+  showMoves = (x: number, y: number): GameTile[] => {
     const target = this.getPiece(x, y)
     if (target) {
       if (target.profession === Professions.Pawn) {
-        const updated = this.getTile(target.x, target.y)
-        updated.highlight = true
-        this.updateTile(target.x, target.y, updated)
+        const options = [this.getTile(target.x, target.y + 1 * target.team)]
+        for (const option of options) {
+          if (option) option.highlight = true
+        }
       }
-    } else {
-      console.error('Piece is undefined, no moves.')
     }
+    return [...this.tiles]
   }
 }
 
