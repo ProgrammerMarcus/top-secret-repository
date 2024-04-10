@@ -30,11 +30,11 @@ for (let i = 0; i < 64; i++) {
 }
 
 for (let i = 0; i < 8; i++) {
-  board.value.addPiece(i + 1, 4, Teams.Black, Professions.Pawn)
+  board.value.addPiece(i + 1, 2, Teams.Black, Professions.Pawn)
 }
 
 for (let i = 0; i < 8; i++) {
-  board.value.addPiece(i + 1, 6, Teams.White, Professions.Pawn)
+  board.value.addPiece(i + 1, 7, Teams.White, Professions.Pawn)
 }
 
 const handleMove = (toX: number, toY: number) => {
@@ -47,8 +47,12 @@ const handleMove = (toX: number, toY: number) => {
 }
 
 const showMoves = (x: number, y: number) => {
-  active = board.value.getPiece(x, y)
-  board.value.tiles = board.value.showMoves(x, y)
+  const target = board.value.showMoves(x, y)
+  if (target) {
+    console.log('Test')
+    active = board.value.getPiece(x, y)
+    board.value.tiles = target
+  }
 }
 </script>
 

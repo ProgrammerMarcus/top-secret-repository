@@ -147,18 +147,38 @@ export class GameBoard {
       return this.pieces
     }
   }
-  showMoves = (x: number, y: number): GameTile[] => {
+  showMoves = (x: number, y: number): GameTile[] | false => {
     this.resetHighlights()
     const target = this.getPiece(x, y)
+    const options: GameTile[] = []
     if (target) {
       if (target.profession === Professions.Pawn) {
-        const options = [this.getTile(target.x, target.y + 1 * target.team)]
+        const front = this.getTile(target.x, target.y + 1 * target.team)
+        if (front && !this.getPiece(target.x, target.y + 1 * target.team)) {
+          options.push(front)
+        }
+        const left = this.getTile(target.x - 1, target.y + 1 * target.team)
+        if (left && this.getPiece(target.x - 1, target.y + 1 * target.team)) {
+          options.push(left)
+        }
+        const right = this.getTile(target.x + 1, target.y + 1 * target.team)
+        if (right && this.getPiece(target.x + 1, target.y + 1 * target.team)) {
+          options.push(right)
+        }
+        const far = this.getTile(target.x, target.y + 2 * target.team)
+        if ((y === 2 || y === 7) && far && !this.getPiece(target.x, target.y + 2 * target.team)) {
+          options.push(far)
+        }
         for (const option of options) {
           if (option) option.highlight = true
         }
       }
     }
-    return [...this.tiles]
+    if (options.length) {
+      return [...this.tiles]
+    } else {
+      return false
+    }
   }
 }
 
