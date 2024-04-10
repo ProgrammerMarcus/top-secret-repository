@@ -5,6 +5,8 @@ import pawnBlack from './assets/pawn_b.png'
 import pawnWhite from './assets/pawn_w.png'
 import kingBlack from './assets/king_b.png'
 import kingWhite from './assets/king_w.png'
+import archerBlack from './assets/archer_b.png'
+import archerWhite from './assets/archer_w.png'
 
 export enum Types {
   Grass,
@@ -18,7 +20,8 @@ export enum Areas {
 
 export enum Professions {
   Pawn,
-  King
+  King,
+  Archer
 }
 
 export enum Teams {
@@ -89,6 +92,12 @@ export class GamePiece {
         this.image = kingWhite
       } else if (this.team === Teams.Black) {
         this.image = kingBlack
+      }
+    } else if (profession === Professions.Archer) {
+      if (this.team === Teams.White) {
+        this.image = archerWhite
+      } else if (this.team === Teams.Black) {
+        this.image = archerBlack
       }
     }
   }
@@ -207,12 +216,109 @@ export class GameBoard {
           options.push(back)
         }
         const backLeft = this.getTile(target.x - 1, target.y - 1)
-        if (backLeft && this.getPiece(target.x + 1, target.y - 1)?.team !== target.team) {
+        if (backLeft && this.getPiece(target.x - 1, target.y - 1)?.team !== target.team) {
           options.push(backLeft)
         }
         const backRight = this.getTile(target.x + 1, target.y - 1)
         if (backRight && this.getPiece(target.x + 1, target.y - 1)?.team !== target.team) {
           options.push(backRight)
+        }
+      } else if (target.profession === Professions.Archer) {
+        const front = this.getTile(target.x, target.y + 2)
+        if (front && this.getPiece(target.x, target.y + 2)?.team !== target.team) {
+          options.push(front)
+        }
+        const frontLeft = this.getTile(target.x - 2, target.y + 2)
+        if (frontLeft && this.getPiece(target.x - 2, target.y + 2)?.team !== target.team) {
+          options.push(frontLeft)
+        }
+        const frontRight = this.getTile(target.x + 2, target.y + 2)
+        if (frontRight && this.getPiece(target.x + 2, target.y + 2)?.team !== target.team) {
+          options.push(frontRight)
+        }
+        const left = this.getTile(target.x - 2, target.y)
+        if (left && this.getPiece(target.x - 2, target.y)?.team !== target.team) {
+          options.push(left)
+        }
+        const right = this.getTile(target.x + 2, target.y)
+        if (right && this.getPiece(target.x + 2, target.y)?.team !== target.team) {
+          options.push(right)
+        }
+        const back = this.getTile(target.x, target.y - 2)
+        if (back && this.getPiece(target.x, target.y - 2)?.team !== target.team) {
+          options.push(back)
+        }
+        const backLeft = this.getTile(target.x - 2, target.y - 2)
+        if (backLeft && this.getPiece(target.x + 2, target.y - 2)?.team !== target.team) {
+          options.push(backLeft)
+        }
+        const backRight = this.getTile(target.x + 2, target.y - 2)
+        if (backRight && this.getPiece(target.x + 2, target.y - 2)?.team !== target.team) {
+          options.push(backRight)
+        }
+        const frontLeftCenter = this.getTile(target.x - 1, target.y + 2)
+        if (frontLeftCenter && this.getPiece(target.x - 1, target.y + 2)?.team !== target.team) {
+          options.push(frontLeftCenter)
+        }
+        const frontRightCenter = this.getTile(target.x + 1, target.y + 2)
+        if (frontRightCenter && this.getPiece(target.x + 1, target.y + 2)?.team !== target.team) {
+          options.push(frontRightCenter)
+        }
+        const rightTopCenter = this.getTile(target.x + 2, target.y + 1)
+        if (rightTopCenter && this.getPiece(target.x + 2, target.y + 1)?.team !== target.team) {
+          options.push(rightTopCenter)
+        }
+        const leftTopCenter = this.getTile(target.x - 2, target.y + 1)
+        if (leftTopCenter && this.getPiece(target.x - 2, target.y + 1)?.team !== target.team) {
+          options.push(leftTopCenter)
+        }
+        const rightBottomCenter = this.getTile(target.x + 2, target.y - 1)
+        if (rightBottomCenter && this.getPiece(target.x + 2, target.y - 1)?.team !== target.team) {
+          options.push(rightBottomCenter)
+        }
+        const leftBottomCenter = this.getTile(target.x - 2, target.y - 1)
+        if (leftBottomCenter && this.getPiece(target.x - 2, target.y + 2)?.team !== target.team) {
+          options.push(leftBottomCenter)
+        }
+        const backCenterLeft = this.getTile(target.x - 1, target.y - 2)
+        if (backCenterLeft && this.getPiece(target.x + 2, target.y - 2)?.team !== target.team) {
+          options.push(backCenterLeft)
+        }
+        const backRightCenter = this.getTile(target.x + 1, target.y - 2)
+        if (backRightCenter && this.getPiece(target.x + 2, target.y - 2)?.team !== target.team) {
+          options.push(backRightCenter)
+        }
+        const nearFront = this.getTile(target.x, target.y + 1)
+        if (nearFront && !this.getPiece(target.x, target.y + 1)) {
+          options.push(nearFront)
+        }
+        const nearFrontLeft = this.getTile(target.x - 1, target.y + 1)
+        if (nearFrontLeft && !this.getPiece(target.x - 1, target.y + 1)) {
+          options.push(nearFrontLeft)
+        }
+        const nearFrontRight = this.getTile(target.x + 1, target.y + 1)
+        if (nearFrontRight && !this.getPiece(target.x + 1, target.y + 1)) {
+          options.push(nearFrontRight)
+        }
+        const nearLeft = this.getTile(target.x - 1, target.y)
+        if (nearLeft && !this.getPiece(target.x - 1, target.y)) {
+          options.push(nearLeft)
+        }
+        const nearRight = this.getTile(target.x + 1, target.y)
+        if (nearRight && !this.getPiece(target.x + 1, target.y)) {
+          options.push(nearRight)
+        }
+        const nearBack = this.getTile(target.x, target.y - 1)
+        if (nearBack && !this.getPiece(target.x, target.y - 1)) {
+          options.push(nearBack)
+        }
+        const nearBackLeft = this.getTile(target.x - 1, target.y - 1)
+        if (nearBackLeft && !this.getPiece(target.x - 1, target.y - 1)) {
+          options.push(nearBackLeft)
+        }
+        const nearBackRight = this.getTile(target.x + 1, target.y - 1)
+        if (nearBackRight && !this.getPiece(target.x + 1, target.y - 1)) {
+          options.push(nearBackRight)
         }
       }
       for (const option of options) {
