@@ -32,10 +32,12 @@ for (let i = 0; i < 64; i++) {
 for (let i = 0; i < 8; i++) {
   board.value.addPiece(i + 1, 2, Teams.Black, Professions.Pawn)
 }
+board.value.addPiece(4, 1, Teams.Black, Professions.King)
 
 for (let i = 0; i < 8; i++) {
   board.value.addPiece(i + 1, 7, Teams.White, Professions.Pawn)
 }
+board.value.addPiece(4, 8, Teams.White, Professions.King)
 
 const handleMove = (toX: number, toY: number) => {
   if (active && board.value.getTile(toX, toY)?.highlight) {

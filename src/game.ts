@@ -3,6 +3,8 @@ import waterCorner from './assets/tiles/tile_water_corner.png'
 import waterMiddle from './assets/tiles/tile_water_middle.png'
 import pawnBlack from './assets/pawn_b.png'
 import pawnWhite from './assets/pawn_w.png'
+import kingBlack from './assets/king_b.png'
+import kingWhite from './assets/king_w.png'
 
 export enum Types {
   Grass,
@@ -15,7 +17,8 @@ export enum Areas {
 }
 
 export enum Professions {
-  Pawn
+  Pawn,
+  King
 }
 
 export enum Teams {
@@ -80,6 +83,12 @@ export class GamePiece {
         this.image = pawnWhite
       } else if (this.team === Teams.Black) {
         this.image = pawnBlack
+      }
+    } else if (profession === Professions.King) {
+      if (this.team === Teams.White) {
+        this.image = kingWhite
+      } else if (this.team === Teams.Black) {
+        this.image = kingBlack
       }
     }
   }
@@ -172,6 +181,42 @@ export class GameBoard {
         for (const option of options) {
           if (option) option.highlight = true
         }
+      } else if (target.profession === Professions.King) {
+        const front = this.getTile(target.x, target.y + 1)
+        if (front && this.getPiece(target.x, target.y + 1)?.team !== target.team) {
+          options.push(front)
+        }
+        const frontLeft = this.getTile(target.x - 1, target.y + 1)
+        if (frontLeft && this.getPiece(target.x - 1, target.y + 1)?.team !== target.team) {
+          options.push(frontLeft)
+        }
+        const frontRight = this.getTile(target.x + 1, target.y + 1)
+        if (frontRight && this.getPiece(target.x + 1, target.y + 1)?.team !== target.team) {
+          options.push(frontRight)
+        }
+        const left = this.getTile(target.x - 1, target.y)
+        if (left && this.getPiece(target.x - 1, target.y)?.team !== target.team) {
+          options.push(left)
+        }
+        const right = this.getTile(target.x + 1, target.y)
+        if (right && this.getPiece(target.x + 1, target.y)?.team !== target.team) {
+          options.push(right)
+        }
+        const back = this.getTile(target.x, target.y - 1)
+        if (back && this.getPiece(target.x, target.y - 1)?.team !== target.team) {
+          options.push(back)
+        }
+        const backLeft = this.getTile(target.x - 1, target.y - 1)
+        if (backLeft && this.getPiece(target.x + 1, target.y - 1)?.team !== target.team) {
+          options.push(backLeft)
+        }
+        const backRight = this.getTile(target.x + 1, target.y - 1)
+        if (backRight && this.getPiece(target.x + 1, target.y - 1)?.team !== target.team) {
+          options.push(backRight)
+        }
+      }
+      for (const option of options) {
+        if (option) option.highlight = true
       }
     }
     if (options.length) {
