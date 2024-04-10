@@ -22,7 +22,7 @@ export enum Teams {
   Black
 }
 
-class GameTile {
+export class GameTile {
   rotate
   type
   area
@@ -55,7 +55,7 @@ class GameTile {
   }
 }
 
-class GamePiece {
+export class GamePiece {
   team
   profession
   x
@@ -78,7 +78,7 @@ class GamePiece {
   }
 }
 
-class GameBoard {
+export class GameBoard {
   width
   height
   tiles: GameTile[]
@@ -105,21 +105,37 @@ class GameBoard {
     this.tiles[x * y - 1] = tile
   }
   getPiece = (x: number, y: number) => {
-    return this.pieces[x * y - 1]
+    return this.pieces.find((p) => p.x === x && p.y === y)
   }
   addPiece = (x: number, y: number, team: Teams, profession: Professions) => {
     this.pieces.push(new GamePiece(x, y, this, team, profession))
   }
   removePiece = (x: number, y: number) => {
-    this.pieces = this.pieces.filter((p) => p.x === x && p.y === y)
+    const index = this.pieces.findIndex((p) => p.x === x && p.y === y)
+    this.pieces = this.pieces.slice(index, index + 1)
+  }
+  movePiece = (fromX: number, fromY: number, toX: number, toY: number) => {
+    const piece = this.getPiece(fromX, fromY)
+    if (piece) {
+      piece.x = toX
+      piece.y = toY
+      return [...this.pieces]
+    } else {
+      console.error('Piece is undefined, cannot move.')
+      return this.pieces
+    }
   }
 
   showMoves = (x: number, y: number): void => {
     const target = this.getPiece(x, y)
-    if (target.profession === Professions.Pawn) {
-      const updated = this.getTile(target.x, target.y)
-      updated.highlight = true
-      this.updateTile(target.x, target.y, updated)
+    if (target) {
+      if (target.profession === Professions.Pawn) {
+        const updated = this.getTile(target.x, target.y)
+        updated.highlight = true
+        this.updateTile(target.x, target.y, updated)
+      }
+    } else {
+      console.error('Piece is undefined, no moves.')
     }
   }
 }

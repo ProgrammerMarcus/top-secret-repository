@@ -3,7 +3,7 @@ import GameDisplay from './components/GameDisplay.vue'
 </script>
 
 <template>
-  <GameDisplay msg="test"></GameDisplay>
+  <GameDisplay></GameDisplay>
 </template>
 
 <style>
