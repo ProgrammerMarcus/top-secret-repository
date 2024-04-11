@@ -58,7 +58,9 @@ const handleMove = (toX: number, toY: number) => {
     board.value.pieces = board.value.movePiece(active.x, active.y, toX, toY)
     active = undefined
   } else {
-    console.log('nope')
+    active = undefined
+    board.value.resetHighlights()
+    board.value.tiles = [...board.value.tiles]
   }
 }
 
