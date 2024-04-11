@@ -81,6 +81,7 @@ export class GamePiece {
   y
   image
   board
+  id
   constructor(
     x: number,
     y: number,
@@ -93,6 +94,7 @@ export class GamePiece {
     this.y = y
     this.profession = profession
     this.board = board
+    this.id = board.pieces.length
     if (profession === Professions.Pawn) {
       if (this.team === Teams.White) {
         this.image = pawnWhite
@@ -284,7 +286,6 @@ export class GameBoard {
     startY: number
   ): void => {
     const tile = this.getTile(target.x, target.y + 2 * target.team)
-    console.log(this.height - startY)
     if (
       (target.y === startY || target.y === this.height - startY + 1) &&
       tile &&

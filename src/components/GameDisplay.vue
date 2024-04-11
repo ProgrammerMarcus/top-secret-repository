@@ -56,7 +56,24 @@ board.value.addPiece(8, 8, Teams.White, Professions.Rook)
 const handleMove = (toX: number, toY: number) => {
   if (active && board.value.getTile(toX, toY)?.highlight) {
     board.value.turn = -board.value.turn
+    const fromX: number = active.x
+    const fromY: number = active.y
     board.value.pieces = board.value.movePiece(active.x, active.y, toX, toY)
+    console.log((active.y - toY) * 96)
+    document.getElementById(`piece_${active.id}`)?.animate(
+      [
+        // keyframes
+        {
+          transform: `translate(${(fromX - toX) * 96}px, ${(fromY - toY) * 96}px)`
+        },
+        { transform: `translate(0px, 0px)` }
+      ],
+      {
+        // timing options
+        duration: 200,
+        iterations: 1
+      }
+    )
     active = undefined
   } else {
     active = undefined
@@ -68,7 +85,6 @@ const handleMove = (toX: number, toY: number) => {
 const showMoves = (x: number, y: number) => {
   const target = board.value.showMoves(x, y)
   if (target) {
-    console.log('Test')
     active = board.value.getPiece(x, y)
     board.value.tiles = target
   }
@@ -84,7 +100,8 @@ const showMoves = (x: number, y: number) => {
         :key="index"
         alt="Game tile"
         class="tile"
-        :style="`grid-area: ${tile.y} / ${tile.x}; rotate: ${tile.rotate}deg; ${tile.highlight ? 'filter: brightness(1.5);' : ''}`"
+        :class="{ highlight: tile.highlight }"
+        :style="`grid-area: ${tile.y} / ${tile.x}; rotate: ${tile.rotate}deg;`"
         @click="handleMove(tile.x, tile.y)"
       />
     </div>
@@ -92,10 +109,16 @@ const showMoves = (x: number, y: number) => {
       <img
         v-for="piece in board.pieces"
         :src="piece.image"
-        :key="`${piece.x}, ${piece.y}`"
+        :key="piece.id"
+        :id="`piece_${piece.id}`"
         alt="Game piece"
         class="piece"
-        :style="`grid-area: ${piece.y} / ${piece.x}; ${active || piece.team !== board.turn ? 'pointer-events: none;' : ''}`"
+        :class="{
+          active: board.turn === piece.team,
+          selected: active?.x === piece.x && active.y === piece.y,
+          clickthrough: active || piece.team !== board.turn
+        }"
+        :style="`grid-area: ${piece.y} / ${piece.x};`"
         @click="showMoves(piece.x, piece.y)"
       />
     </div>
@@ -131,5 +154,28 @@ const showMoves = (x: number, y: number) => {
     height: 100%;
     pointer-events: all;
   }
+  .piece.clickthrough {
+    pointer-events: none;
+  }
+}
+
+@keyframes highlight {
+  from {
+    filter: brightness(1.4);
+  }
+  to {
+    filter: brightness(1.2);
+  }
+}
+
+.highlight {
+  animation: 0.5s infinite alternate highlight;
+}
+
+.active:hover {
+  filter: brightness(1.4);
+}
+.selected {
+  animation: 0.5s infinite alternate highlight;
 }
 </style>
