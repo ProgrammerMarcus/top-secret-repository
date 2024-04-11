@@ -165,161 +165,117 @@ export class GameBoard {
       return this.pieces
     }
   }
+
+  /**
+   * Checks if there are no pieces on offset from target
+   * @param options The tiles to check to mark for availability
+   * @param target The piece to check
+   * @param x Offset in x direction
+   * @param y Offset in y direction
+   */
+  checkNone = (options: GameTile[], target: GamePiece, x: number = 0, y: number = 0): void => {
+    const tile = this.getTile(target.x + x, target.y + y * target.team)
+    if (tile && !this.getPiece(target.x + x, target.y + y * target.team)) {
+      options.push(tile)
+    }
+  }
+  /**
+   * Checks if there is an enemy on offset from target
+   * @param options The tiles to check to mark for availability
+   * @param target The piece to check
+   * @param x Offset in x direction
+   * @param y Offset in y direction
+   */
+  checkEnemy = (options: GameTile[], target: GamePiece, x: number = 0, y: number = 0): void => {
+    const tile = this.getTile(target.x + x, target.y + y * target.team)
+    if (
+      tile &&
+      this.getPiece(target.x + x, target.y + y * target.team) &&
+      this.getPiece(target.x + x, target.y + y * target.team)?.team !== target.team
+    ) {
+      options.push(tile)
+    }
+  }
+  /**
+   * Checks if there is an enemy on offset from target
+   * @param options The tiles to check to mark for availability
+   * @param target The piece to check
+   * @param x Offset in x direction
+   * @param y Offset in y direction
+   */
+  checkNoneOrEnemy = (
+    options: GameTile[],
+    target: GamePiece,
+    x: number = 0,
+    y: number = 0
+  ): void => {
+    const tile = this.getTile(target.x + x, target.y + y * target.team)
+    if (
+      tile &&
+      ((this.getPiece(target.x + x, target.y + y * target.team) &&
+        this.getPiece(target.x + x, target.y + y * target.team)?.team !== target.team) ||
+        !this.getPiece(target.x + x, target.y + y * target.team))
+    ) {
+      options.push(tile)
+    }
+  }
+  /**
+   * Checks if there is an enemy on offset from target
+   * @param options The tiles to check to mark for availability
+   * @param target The piece to check
+   * @param x Offset in x direction
+   * @param y Offset in y direction
+   * @param startY Required position to allow
+   */
+  checkRun = (
+    options: GameTile[],
+    target: GamePiece,
+    x: number = 0,
+    y: number = 0,
+    startY: number
+  ): void => {
+    const tile = this.getTile(target.x, target.y + 2 * target.team)
+    console.log(this.height - startY)
+    if (
+      (target.y === startY || target.y === this.height - startY + 1) &&
+      tile &&
+      this.getPiece(target.x + x, target.y + y * target.team) === undefined
+    ) {
+      options.push(tile)
+    }
+  }
   showMoves = (x: number, y: number): GameTile[] | false => {
     this.resetHighlights()
     const target = this.getPiece(x, y)
     const options: GameTile[] = []
     if (target) {
       if (target.profession === Professions.Pawn) {
-        const front = this.getTile(target.x, target.y + 1 * target.team)
-        if (front && !this.getPiece(target.x, target.y + 1 * target.team)) {
-          options.push(front)
-        }
-        const left = this.getTile(target.x - 1, target.y + 1 * target.team)
-        if (left && this.getPiece(target.x - 1, target.y + 1 * target.team)) {
-          options.push(left)
-        }
-        const right = this.getTile(target.x + 1, target.y + 1 * target.team)
-        if (right && this.getPiece(target.x + 1, target.y + 1 * target.team)) {
-          options.push(right)
-        }
-        const far = this.getTile(target.x, target.y + 2 * target.team)
-        if ((y === 2 || y === 7) && far && !this.getPiece(target.x, target.y + 2 * target.team)) {
-          options.push(far)
-        }
-        for (const option of options) {
-          if (option) option.highlight = true
-        }
+        this.checkNone(options, target, 0, 1)
+        this.checkEnemy(options, target, -1, 1)
+        this.checkEnemy(options, target, 1, 1)
+        this.checkRun(options, target, 0, 2, 2)
       } else if (target.profession === Professions.King) {
-        const front = this.getTile(target.x, target.y + 1)
-        if (front && this.getPiece(target.x, target.y + 1)?.team !== target.team) {
-          options.push(front)
-        }
-        const frontLeft = this.getTile(target.x - 1, target.y + 1)
-        if (frontLeft && this.getPiece(target.x - 1, target.y + 1)?.team !== target.team) {
-          options.push(frontLeft)
-        }
-        const frontRight = this.getTile(target.x + 1, target.y + 1)
-        if (frontRight && this.getPiece(target.x + 1, target.y + 1)?.team !== target.team) {
-          options.push(frontRight)
-        }
-        const left = this.getTile(target.x - 1, target.y)
-        if (left && this.getPiece(target.x - 1, target.y)?.team !== target.team) {
-          options.push(left)
-        }
-        const right = this.getTile(target.x + 1, target.y)
-        if (right && this.getPiece(target.x + 1, target.y)?.team !== target.team) {
-          options.push(right)
-        }
-        const back = this.getTile(target.x, target.y - 1)
-        if (back && this.getPiece(target.x, target.y - 1)?.team !== target.team) {
-          options.push(back)
-        }
-        const backLeft = this.getTile(target.x - 1, target.y - 1)
-        if (backLeft && this.getPiece(target.x - 1, target.y - 1)?.team !== target.team) {
-          options.push(backLeft)
-        }
-        const backRight = this.getTile(target.x + 1, target.y - 1)
-        if (backRight && this.getPiece(target.x + 1, target.y - 1)?.team !== target.team) {
-          options.push(backRight)
-        }
+        this.checkNoneOrEnemy(options, target, 0, 1)
+        this.checkNoneOrEnemy(options, target, 1, 1)
+        this.checkNoneOrEnemy(options, target, 1, 0)
+        this.checkNoneOrEnemy(options, target, 0, -1)
+        this.checkNoneOrEnemy(options, target, -1, 0)
+        this.checkNoneOrEnemy(options, target, -1, 1)
+        this.checkNoneOrEnemy(options, target, -1, -1)
+        this.checkNoneOrEnemy(options, target, 1, -1)
       } else if (target.profession === Professions.Archer) {
-        const front = this.getTile(target.x, target.y + 2)
-        if (front && this.getPiece(target.x, target.y + 2)?.team !== target.team) {
-          options.push(front)
-        }
-        const frontLeft = this.getTile(target.x - 2, target.y + 2)
-        if (frontLeft && this.getPiece(target.x - 2, target.y + 2)?.team !== target.team) {
-          options.push(frontLeft)
-        }
-        const frontRight = this.getTile(target.x + 2, target.y + 2)
-        if (frontRight && this.getPiece(target.x + 2, target.y + 2)?.team !== target.team) {
-          options.push(frontRight)
-        }
-        const left = this.getTile(target.x - 2, target.y)
-        if (left && this.getPiece(target.x - 2, target.y)?.team !== target.team) {
-          options.push(left)
-        }
-        const right = this.getTile(target.x + 2, target.y)
-        if (right && this.getPiece(target.x + 2, target.y)?.team !== target.team) {
-          options.push(right)
-        }
-        const back = this.getTile(target.x, target.y - 2)
-        if (back && this.getPiece(target.x, target.y - 2)?.team !== target.team) {
-          options.push(back)
-        }
-        const backLeft = this.getTile(target.x - 2, target.y - 2)
-        if (backLeft && this.getPiece(target.x + 2, target.y - 2)?.team !== target.team) {
-          options.push(backLeft)
-        }
-        const backRight = this.getTile(target.x + 2, target.y - 2)
-        if (backRight && this.getPiece(target.x + 2, target.y - 2)?.team !== target.team) {
-          options.push(backRight)
-        }
-        const frontLeftCenter = this.getTile(target.x - 1, target.y + 2)
-        if (frontLeftCenter && this.getPiece(target.x - 1, target.y + 2)?.team !== target.team) {
-          options.push(frontLeftCenter)
-        }
-        const frontRightCenter = this.getTile(target.x + 1, target.y + 2)
-        if (frontRightCenter && this.getPiece(target.x + 1, target.y + 2)?.team !== target.team) {
-          options.push(frontRightCenter)
-        }
-        const rightTopCenter = this.getTile(target.x + 2, target.y + 1)
-        if (rightTopCenter && this.getPiece(target.x + 2, target.y + 1)?.team !== target.team) {
-          options.push(rightTopCenter)
-        }
-        const leftTopCenter = this.getTile(target.x - 2, target.y + 1)
-        if (leftTopCenter && this.getPiece(target.x - 2, target.y + 1)?.team !== target.team) {
-          options.push(leftTopCenter)
-        }
-        const rightBottomCenter = this.getTile(target.x + 2, target.y - 1)
-        if (rightBottomCenter && this.getPiece(target.x + 2, target.y - 1)?.team !== target.team) {
-          options.push(rightBottomCenter)
-        }
-        const leftBottomCenter = this.getTile(target.x - 2, target.y - 1)
-        if (leftBottomCenter && this.getPiece(target.x - 2, target.y + 2)?.team !== target.team) {
-          options.push(leftBottomCenter)
-        }
-        const backCenterLeft = this.getTile(target.x - 1, target.y - 2)
-        if (backCenterLeft && this.getPiece(target.x + 2, target.y - 2)?.team !== target.team) {
-          options.push(backCenterLeft)
-        }
-        const backRightCenter = this.getTile(target.x + 1, target.y - 2)
-        if (backRightCenter && this.getPiece(target.x + 2, target.y - 2)?.team !== target.team) {
-          options.push(backRightCenter)
-        }
-        const nearFront = this.getTile(target.x, target.y + 1)
-        if (nearFront && !this.getPiece(target.x, target.y + 1)) {
-          options.push(nearFront)
-        }
-        const nearFrontLeft = this.getTile(target.x - 1, target.y + 1)
-        if (nearFrontLeft && !this.getPiece(target.x - 1, target.y + 1)) {
-          options.push(nearFrontLeft)
-        }
-        const nearFrontRight = this.getTile(target.x + 1, target.y + 1)
-        if (nearFrontRight && !this.getPiece(target.x + 1, target.y + 1)) {
-          options.push(nearFrontRight)
-        }
-        const nearLeft = this.getTile(target.x - 1, target.y)
-        if (nearLeft && !this.getPiece(target.x - 1, target.y)) {
-          options.push(nearLeft)
-        }
-        const nearRight = this.getTile(target.x + 1, target.y)
-        if (nearRight && !this.getPiece(target.x + 1, target.y)) {
-          options.push(nearRight)
-        }
-        const nearBack = this.getTile(target.x, target.y - 1)
-        if (nearBack && !this.getPiece(target.x, target.y - 1)) {
-          options.push(nearBack)
-        }
-        const nearBackLeft = this.getTile(target.x - 1, target.y - 1)
-        if (nearBackLeft && !this.getPiece(target.x - 1, target.y - 1)) {
-          options.push(nearBackLeft)
-        }
-        const nearBackRight = this.getTile(target.x + 1, target.y - 1)
-        if (nearBackRight && !this.getPiece(target.x + 1, target.y - 1)) {
-          options.push(nearBackRight)
-        }
+        this.checkNone(options, target, 0, 1)
+        this.checkNone(options, target, 1, 0)
+        this.checkNone(options, target, 0, -1)
+        this.checkNone(options, target, -1, 0)
+        this.checkEnemy(options, target, -1, 1)
+        this.checkEnemy(options, target, -1, -1)
+        this.checkEnemy(options, target, 1, 1)
+        this.checkEnemy(options, target, 1, -1)
+        this.checkEnemy(options, target, 2, 0)
+        this.checkEnemy(options, target, 0, 2)
+        this.checkEnemy(options, target, 0, -2)
+        this.checkEnemy(options, target, -2, 0)
       }
       for (const option of options) {
         if (option) option.highlight = true
