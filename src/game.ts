@@ -7,6 +7,10 @@ import kingBlack from './assets/king_b.png'
 import kingWhite from './assets/king_w.png'
 import archerBlack from './assets/archer_b.png'
 import archerWhite from './assets/archer_w.png'
+import queenBlack from './assets/queen_b.png'
+import queenWhite from './assets/queen_w.png'
+import bishopBlack from './assets/bishop_b.png'
+import bishopWhite from './assets/bishop_w.png'
 
 export enum Types {
   Grass,
@@ -21,7 +25,9 @@ export enum Areas {
 export enum Professions {
   Pawn,
   King,
-  Archer
+  Archer,
+  Queen,
+  Bishop
 }
 
 export enum Teams {
@@ -98,6 +104,18 @@ export class GamePiece {
         this.image = archerWhite
       } else if (this.team === Teams.Black) {
         this.image = archerBlack
+      }
+    } else if (profession === Professions.Queen) {
+      if (this.team === Teams.White) {
+        this.image = queenWhite
+      } else if (this.team === Teams.Black) {
+        this.image = queenBlack
+      }
+    } else if (profession === Professions.Bishop) {
+      if (this.team === Teams.White) {
+        this.image = bishopWhite
+      } else if (this.team === Teams.Black) {
+        this.image = bishopBlack
       }
     }
   }
@@ -210,13 +228,25 @@ export class GameBoard {
     y: number = 0
   ): void => {
     const tile = this.getTile(target.x + x, target.y + y * target.team)
-    if (
-      tile &&
-      ((this.getPiece(target.x + x, target.y + y * target.team) &&
-        this.getPiece(target.x + x, target.y + y * target.team)?.team !== target.team) ||
-        !this.getPiece(target.x + x, target.y + y * target.team))
-    ) {
+    if (tile && this.getPiece(target.x + x, target.y + y * target.team)?.team !== target.team) {
       options.push(tile)
+    }
+  }
+  checkDirection = (options: GameTile[], target: GamePiece, x: number = 0, y: number = 0): void => {
+    for (let i = 1; i < this.tiles.length; i++) {
+      const tile = this.getTile(target.x + x * i, target.y + y * target.team * i)
+      if (tile && !this.getPiece(target.x + x * i, target.y + y * target.team * i)) {
+        options.push(tile)
+      } else if (
+        tile &&
+        this.getPiece(target.x + x * i, target.y + y * target.team * i) &&
+        this.getPiece(target.x + x * i, target.y + y * target.team * i)?.team !== target.team
+      ) {
+        options.push(tile)
+        break
+      } else {
+        break
+      }
     }
   }
   /**
@@ -276,6 +306,20 @@ export class GameBoard {
         this.checkEnemy(options, target, 0, 2)
         this.checkEnemy(options, target, 0, -2)
         this.checkEnemy(options, target, -2, 0)
+      } else if (target.profession === Professions.Queen) {
+        this.checkDirection(options, target, 1, 1)
+        this.checkDirection(options, target, -1, 1)
+        this.checkDirection(options, target, -1, -1)
+        this.checkDirection(options, target, 1, -1)
+        this.checkDirection(options, target, 1, 0)
+        this.checkDirection(options, target, 0, 1)
+        this.checkDirection(options, target, -1, 0)
+        this.checkDirection(options, target, 0, -1)
+      } else if (target.profession === Professions.Bishop) {
+        this.checkDirection(options, target, 1, 1)
+        this.checkDirection(options, target, -1, 1)
+        this.checkDirection(options, target, -1, -1)
+        this.checkDirection(options, target, 1, -1)
       }
       for (const option of options) {
         if (option) option.highlight = true
