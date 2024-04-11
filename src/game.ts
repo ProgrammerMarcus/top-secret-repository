@@ -140,6 +140,7 @@ export class GamePiece {
 }
 
 export class GameBoard {
+  turn: Teams = Teams.White
   width
   height
   tiles: GameTile[]

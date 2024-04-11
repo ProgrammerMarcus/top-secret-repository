@@ -55,6 +55,7 @@ board.value.addPiece(8, 8, Teams.White, Professions.Rook)
 
 const handleMove = (toX: number, toY: number) => {
   if (active && board.value.getTile(toX, toY)?.highlight) {
+    board.value.turn = -board.value.turn
     board.value.pieces = board.value.movePiece(active.x, active.y, toX, toY)
     active = undefined
   } else {
@@ -94,7 +95,7 @@ const showMoves = (x: number, y: number) => {
         :key="`${piece.x}, ${piece.y}`"
         alt="Game piece"
         class="piece"
-        :style="`grid-area: ${piece.y} / ${piece.x}; ${active ? 'pointer-events: none;' : ''}`"
+        :style="`grid-area: ${piece.y} / ${piece.x}; ${active || piece.team !== board.turn ? 'pointer-events: none;' : ''}`"
         @click="showMoves(piece.x, piece.y)"
       />
     </div>
