@@ -36,6 +36,10 @@ board.value.addPiece(4, 1, Teams.Black, Professions.King)
 board.value.addPiece(6, 1, Teams.Black, Professions.Archer)
 board.value.addPiece(5, 1, Teams.Black, Professions.Queen)
 board.value.addPiece(3, 1, Teams.Black, Professions.Bishop)
+board.value.addPiece(7, 1, Teams.Black, Professions.Knight)
+board.value.addPiece(2, 1, Teams.Black, Professions.Knight)
+board.value.addPiece(1, 1, Teams.Black, Professions.Rook)
+board.value.addPiece(8, 1, Teams.Black, Professions.Rook)
 
 for (let i = 0; i < 8; i++) {
   board.value.addPiece(i + 1, 7, Teams.White, Professions.Pawn)
@@ -44,6 +48,10 @@ board.value.addPiece(5, 8, Teams.White, Professions.King)
 board.value.addPiece(3, 8, Teams.White, Professions.Archer)
 board.value.addPiece(4, 8, Teams.White, Professions.Queen)
 board.value.addPiece(6, 8, Teams.White, Professions.Bishop)
+board.value.addPiece(7, 8, Teams.White, Professions.Knight)
+board.value.addPiece(2, 8, Teams.White, Professions.Knight)
+board.value.addPiece(1, 8, Teams.White, Professions.Rook)
+board.value.addPiece(8, 8, Teams.White, Professions.Rook)
 
 const handleMove = (toX: number, toY: number) => {
   if (active && board.value.getTile(toX, toY)?.highlight) {

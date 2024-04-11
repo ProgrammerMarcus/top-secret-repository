@@ -11,6 +11,10 @@ import queenBlack from './assets/queen_b.png'
 import queenWhite from './assets/queen_w.png'
 import bishopBlack from './assets/bishop_b.png'
 import bishopWhite from './assets/bishop_w.png'
+import knightBlack from './assets/knight_b.png'
+import knightWhite from './assets/knight_w.png'
+import rookBlack from './assets/rook_b.png'
+import rookWhite from './assets/rook_w.png'
 
 export enum Types {
   Grass,
@@ -27,7 +31,9 @@ export enum Professions {
   King,
   Archer,
   Queen,
-  Bishop
+  Bishop,
+  Knight,
+  Rook
 }
 
 export enum Teams {
@@ -116,6 +122,18 @@ export class GamePiece {
         this.image = bishopWhite
       } else if (this.team === Teams.Black) {
         this.image = bishopBlack
+      }
+    } else if (profession === Professions.Knight) {
+      if (this.team === Teams.White) {
+        this.image = knightWhite
+      } else if (this.team === Teams.Black) {
+        this.image = knightBlack
+      }
+    } else if (profession === Professions.Rook) {
+      if (this.team === Teams.White) {
+        this.image = rookWhite
+      } else if (this.team === Teams.Black) {
+        this.image = rookBlack
       }
     }
   }
@@ -320,6 +338,20 @@ export class GameBoard {
         this.checkDirection(options, target, -1, 1)
         this.checkDirection(options, target, -1, -1)
         this.checkDirection(options, target, 1, -1)
+      } else if (target.profession === Professions.Knight) {
+        this.checkNoneOrEnemy(options, target, 1, 2)
+        this.checkNoneOrEnemy(options, target, 1, -2)
+        this.checkNoneOrEnemy(options, target, -1, 2)
+        this.checkNoneOrEnemy(options, target, -1, -2)
+        this.checkNoneOrEnemy(options, target, 2, 1)
+        this.checkNoneOrEnemy(options, target, 2, -1)
+        this.checkNoneOrEnemy(options, target, -2, 1)
+        this.checkNoneOrEnemy(options, target, -2, -1)
+      } else if (target.profession === Professions.Rook) {
+        this.checkDirection(options, target, 1, 0)
+        this.checkDirection(options, target, 0, 1)
+        this.checkDirection(options, target, -1, 0)
+        this.checkDirection(options, target, 0, -1)
       }
       for (const option of options) {
         if (option) option.highlight = true
