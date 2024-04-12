@@ -5,9 +5,3 @@ import GameDisplay from './components/GameDisplay.vue'
 <template>
   <GameDisplay></GameDisplay>
 </template>
-
-<style>
-body {
-  image-rendering: pixelated;
-}
-</style>

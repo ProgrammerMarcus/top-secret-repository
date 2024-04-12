@@ -8,11 +8,12 @@
 }
 
 body {
+  image-rendering: pixelated;
   margin: 0;
   min-height: 100vh;
   min-width: 100vh;
   color: white;
-  background: rgb(99, 155, 255);
+  background: #333;
   transition:
     color 0.5s,
     background-color 0.5s;

@@ -1,9 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import GameBoard, { Areas, GamePiece, Professions, Teams, Types } from '../game'
 const board = ref(new GameBoard(15, 10))
 let active: undefined | GamePiece = undefined
-const size = 96
+const size = ref(Math.floor(window.innerHeight / 10))
+
+const updateSize = () => {
+  size.value = Math.floor(window.innerHeight / 10)
+}
+
+onMounted(() => {
+  window.addEventListener('resize', updateSize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateSize)
+})
 
 for (let x = 1; x <= board.value.width; x++) {
   for (let y = 1; y <= board.value.height; y++) {
@@ -78,7 +90,7 @@ const handleMove = (toX: number, toY: number) => {
       [
         // keyframes
         {
-          transform: `translate(${(fromX - toX) * size}px, ${(fromY - toY) * size}px)`
+          transform: `translate(${(fromX - toX) * size.value}px, ${(fromY - toY) * size.value}px)`
         },
         { transform: `translate(0px, 0px)` }
       ],
@@ -145,28 +157,30 @@ const showMoves = (x: number, y: number) => {
 
 <style scoped>
 .board {
-  position: relative;
+  display: grid;
   margin: auto;
+  background-color: rgb(99, 155, 255);
 }
 .tiles {
-  background-color: gray;
-  position: absolute;
+  position: relative;
   top: 0;
   left: 0;
   display: grid;
   place-content: center;
+  grid-area: 1 / 1;
   grid-template: v-bind('`repeat(${board.height}, ${size}px) / repeat(${board.width}, ${size}px)`');
   .tile {
     height: v-bind('`${size}px`');
   }
 }
 .pieces {
-  position: absolute;
+  position: relative;
   top: 0;
   left: 0;
   display: grid;
   place-content: center;
   pointer-events: none;
+  grid-area: 1 / 1;
   grid-template: v-bind('`repeat(${board.height}, ${size}px) / repeat(${board.width}, ${size}px)`');
   .piece {
     margin: auto;
