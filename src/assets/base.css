@@ -12,7 +12,7 @@ body {
   min-height: 100vh;
   min-width: 100vh;
   color: white;
-  background: #333;
+  background: rgb(99, 155, 255);
   transition:
     color 0.5s,
     background-color 0.5s;

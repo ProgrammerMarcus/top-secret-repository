@@ -1,29 +1,39 @@
+// tiles
 import grass from './assets/tiles/tile_grass.png'
 import waterCorner from './assets/tiles/tile_water_corner.png'
 import waterMiddle from './assets/tiles/tile_water_middle.png'
-import pawnBlack from './assets/pawn_b.png'
-import pawnWhite from './assets/pawn_w.png'
-import kingBlack from './assets/king_b.png'
-import kingWhite from './assets/king_w.png'
-import archerBlack from './assets/archer_b.png'
-import archerWhite from './assets/archer_w.png'
-import queenBlack from './assets/queen_b.png'
-import queenWhite from './assets/queen_w.png'
-import bishopBlack from './assets/bishop_b.png'
-import bishopWhite from './assets/bishop_w.png'
-import knightBlack from './assets/knight_b.png'
-import knightWhite from './assets/knight_w.png'
-import rookBlack from './assets/rook_b.png'
-import rookWhite from './assets/rook_w.png'
+import bush from './assets/tiles/tile_bush.png'
+import rock from './assets/tiles/tile_rock.png'
+import log from './assets/tiles/tile_log.png'
+
+// pieces
+import pawnBlack from './assets/pieces/pawn_b.webp'
+import pawnWhite from './assets/pieces/farmer_w.webp'
+import kingBlack from './assets/pieces/fire_b.webp'
+import kingWhite from './assets/pieces/king_w.webp'
+import archerBlack from './assets/pieces/archer_b.webp'
+import archerWhite from './assets/pieces/leaf_w.webp'
+import queenBlack from './assets/pieces/aristocrat_b.webp'
+import queenWhite from './assets/pieces/princess_w.webp'
+import bishopBlack from './assets/pieces/jester_b.webp'
+import bishopWhite from './assets/pieces/priestess_w.webp'
+import knightBlack from './assets/pieces/stranger_b.webp'
+import knightWhite from './assets/pieces/captain_w.webp'
+import rookBlack from './assets/pieces/metal_b.webp'
+import rookWhite from './assets/pieces/shady_w.webp'
 
 export enum Types {
   Grass,
   WaterCorner,
-  WaterMiddle
+  WaterMiddle,
+  Rock,
+  Bush,
+  Log
 }
 
 export enum Areas {
-  Regular
+  Regular,
+  None
 }
 
 export enum Professions {
@@ -68,6 +78,12 @@ export class GameTile {
       this.image = waterCorner
     } else if (type === Types.WaterMiddle) {
       this.image = waterMiddle
+    } else if (type === Types.Rock) {
+      this.image = rock
+    } else if (type === Types.Log) {
+      this.image = log
+    } else if (type === Types.Bush) {
+      this.image = bush
     } else {
       this.image = grass
     }
@@ -154,7 +170,12 @@ export class GameBoard {
     this.pieces = pieces
   }
   getTile = (x: number, y: number) => {
-    return this.tiles.find((p) => p.x === x && p.y === y)
+    const tile = this.tiles.find((p) => p.x === x && p.y === y)
+    if (tile && tile.area !== Areas.None) {
+      return tile
+    } else {
+      return undefined
+    }
   }
   addTile = (
     x: number,
@@ -213,8 +234,8 @@ export class GameBoard {
    * @param y Offset in y direction
    */
   checkNone = (options: GameTile[], target: GamePiece, x: number = 0, y: number = 0): void => {
-    const tile = this.getTile(target.x + x, target.y + y * target.team)
-    if (tile && !this.getPiece(target.x + x, target.y + y * target.team)) {
+    const tile = this.getTile(target.x + x * target.team, target.y + y)
+    if (tile && !this.getPiece(target.x + x * target.team, target.y + y)) {
       options.push(tile)
     }
   }
@@ -226,11 +247,11 @@ export class GameBoard {
    * @param y Offset in y direction
    */
   checkEnemy = (options: GameTile[], target: GamePiece, x: number = 0, y: number = 0): void => {
-    const tile = this.getTile(target.x + x, target.y + y * target.team)
+    const tile = this.getTile(target.x + x * target.team, target.y + y)
     if (
       tile &&
-      this.getPiece(target.x + x, target.y + y * target.team) &&
-      this.getPiece(target.x + x, target.y + y * target.team)?.team !== target.team
+      this.getPiece(target.x + x * target.team, target.y + y) &&
+      this.getPiece(target.x + x * target.team, target.y + y)?.team !== target.team
     ) {
       options.push(tile)
     }
@@ -248,22 +269,43 @@ export class GameBoard {
     x: number = 0,
     y: number = 0
   ): void => {
-    const tile = this.getTile(target.x + x, target.y + y * target.team)
-    if (tile && this.getPiece(target.x + x, target.y + y * target.team)?.team !== target.team) {
+    const tile = this.getTile(target.x + x * target.team, target.y + y)
+    if (tile && this.getPiece(target.x + x * target.team, target.y + y)?.team !== target.team) {
       options.push(tile)
     }
   }
   checkDirection = (options: GameTile[], target: GamePiece, x: number = 0, y: number = 0): void => {
     for (let i = 1; i < this.tiles.length; i++) {
-      const tile = this.getTile(target.x + x * i, target.y + y * target.team * i)
-      if (tile && !this.getPiece(target.x + x * i, target.y + y * target.team * i)) {
+      const tile = this.getTile(target.x + x * i, target.y + y * i)
+      if (tile && !this.getPiece(target.x + x * i, target.y + y * i)) {
         options.push(tile)
       } else if (
         tile &&
-        this.getPiece(target.x + x * i, target.y + y * target.team * i) &&
-        this.getPiece(target.x + x * i, target.y + y * target.team * i)?.team !== target.team
+        this.getPiece(target.x + x * i, target.y + y * i) &&
+        this.getPiece(target.x + x * i, target.y + y * i)?.team !== target.team
       ) {
         options.push(tile)
+        break
+      } else {
+        break
+      }
+    }
+  }
+  checkRush = (
+    options: GameTile[],
+    target: GamePiece,
+    x: number = 0,
+    y: number = 0,
+    limit: number
+  ): void => {
+    for (let i = 1; i < this.tiles.length; i++) {
+      if (options.length >= limit) {
+        break
+      }
+      const tile = this.getTile(target.x + x * i * target.team, target.y + y * i)
+      if (tile && !this.getPiece(target.x + x * i * target.team, target.y + y * i)) {
+        options.push(tile)
+      } else if (tile && this.getPiece(target.x + x * i * target.team, target.y + y * i)) {
         break
       } else {
         break
@@ -274,22 +316,24 @@ export class GameBoard {
    * Checks if there is an enemy on offset from target
    * @param options The tiles to check to mark for availability
    * @param target The piece to check
-   * @param x Offset in x direction
-   * @param y Offset in y direction
-   * @param startY Required position to allow
    */
-  checkRun = (
-    options: GameTile[],
-    target: GamePiece,
-    x: number = 0,
-    y: number = 0,
-    startY: number
-  ): void => {
-    const tile = this.getTile(target.x, target.y + 2 * target.team)
+  checkRun = (options: GameTile[], target: GamePiece): void => {
+    const tile = this.getTile(target.x + 2 * target.team, target.y)
     if (
-      (target.y === startY || target.y === this.height - startY + 1) &&
+      (target.x === 3 || target.x === this.width - 2) &&
       tile &&
-      this.getPiece(target.x + x, target.y + y * target.team) === undefined
+      this.getPiece(target.x + 2 * target.team, target.y) === undefined &&
+      this.getPiece(target.x + 1 * target.team, target.y) === undefined
+    ) {
+      options.push(tile)
+    }
+  }
+  checkLeap = (options: GameTile[], target: GamePiece): void => {
+    const tile = this.getTile(target.x + 2 * target.team, target.y)
+    if (
+      tile &&
+      this.getPiece(target.x + 2 * target.team, target.y) === undefined &&
+      this.getTile(target.x + 1 * target.team, target.y) === undefined
     ) {
       options.push(tile)
     }
@@ -300,10 +344,11 @@ export class GameBoard {
     const options: GameTile[] = []
     if (target) {
       if (target.profession === Professions.Pawn) {
-        this.checkNone(options, target, 0, 1)
+        this.checkRush(options, target, 1, 0, 1)
         this.checkEnemy(options, target, -1, 1)
         this.checkEnemy(options, target, 1, 1)
-        this.checkRun(options, target, 0, 2, 2)
+        this.checkRun(options, target)
+        this.checkLeap(options, target)
       } else if (target.profession === Professions.King) {
         this.checkNoneOrEnemy(options, target, 0, 1)
         this.checkNoneOrEnemy(options, target, 1, 1)
