@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import GameBoard, { Areas, GamePiece, Professions, Teams, Types } from '../game'
-
-const board = ref(new GameBoard(8, 8))
+import TurnDisplay from './TurnDisplay.vue'
+const board = ref(new GameBoard(16, 8))
 let active: undefined | GamePiece = undefined
+const size = 96
 
-for (let i = 0; i < 64; i++) {
-  const x = Math.floor(i % 8) + 1
-  const y = Math.floor(i / 8) + 1
+for (let i = 1; i <= board.value.width * board.value.height; i++) {
+  console.log(i)
+  const x = i % (board.value.width + 1)
+  const y = i % (board.value.height + 1)
   if (x === 1 && y === 1) {
     board.value.addTile(x, y, Types.WaterCorner, Areas.Regular, 90)
   } else if (x === 8 && y === 1) {
@@ -28,6 +30,8 @@ for (let i = 0; i < 64; i++) {
     board.value.addTile(x, y)
   }
 }
+
+console.log(board.value.tiles.length)
 
 for (let i = 0; i < 8; i++) {
   board.value.addPiece(i + 1, 2, Teams.Black, Professions.Pawn)
@@ -59,12 +63,11 @@ const handleMove = (toX: number, toY: number) => {
     const fromX: number = active.x
     const fromY: number = active.y
     board.value.pieces = board.value.movePiece(active.x, active.y, toX, toY)
-    console.log((active.y - toY) * 96)
     document.getElementById(`piece_${active.id}`)?.animate(
       [
         // keyframes
         {
-          transform: `translate(${(fromX - toX) * 96}px, ${(fromY - toY) * 96}px)`
+          transform: `translate(${(fromX - toX) * size}px, ${(fromY - toY) * size}px)`
         },
         { transform: `translate(0px, 0px)` }
       ],
@@ -100,6 +103,7 @@ const showMoves = (x: number, y: number) => {
         :key="index"
         alt="Game tile"
         class="tile"
+        draggable="false"
         :class="{ highlight: tile.highlight }"
         :style="`grid-area: ${tile.y} / ${tile.x}; rotate: ${tile.rotate}deg;`"
         @click="handleMove(tile.x, tile.y)"
@@ -113,6 +117,7 @@ const showMoves = (x: number, y: number) => {
         :id="`piece_${piece.id}`"
         alt="Game piece"
         class="piece"
+        draggable="false"
         :class="{
           active: board.turn === piece.team,
           selected: active?.x === piece.x && active.y === piece.y,
@@ -122,6 +127,7 @@ const showMoves = (x: number, y: number) => {
         @click="showMoves(piece.x, piece.y)"
       />
     </div>
+    <TurnDisplay :teamName="`${board.turn === -1 ? 'White' : 'Black'}`"></TurnDisplay>
   </div>
 </template>
 
@@ -136,9 +142,8 @@ const showMoves = (x: number, y: number) => {
   left: 0;
   display: grid;
   place-content: center;
-  grid-template: v-bind('`repeat(${board.height}, 96px) / repeat(${board.width}, 96px)`');
   .tile {
-    height: 100%;
+    height: v-bind('`${size}px`');
   }
 }
 .pieces {
@@ -148,10 +153,9 @@ const showMoves = (x: number, y: number) => {
   display: grid;
   place-content: center;
   pointer-events: none;
-  grid-template: v-bind('`repeat(${board.height}, 96px) / repeat(${board.width}, 96px)`');
   .piece {
     margin: auto;
-    height: 100%;
+    height: v-bind('`${size}px`');
     pointer-events: all;
   }
   .piece.clickthrough {
