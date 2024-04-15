@@ -78,9 +78,6 @@ board.value.addPiece(14, 3, Teams.White, Professions.Knight)
 board.value.addPiece(13, 2, Teams.White, Professions.Archer)
 board.value.addPiece(13, 9, Teams.White, Professions.Archer)
 
-board.value.addPiece(8, 6, Teams.White, Professions.King)
-board.value.addPiece(7, 6, Teams.Black, Professions.King)
-
 const handleAI = () => {
   const action = board.value.simpleAI()
   if (action) {
