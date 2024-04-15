@@ -21,7 +21,11 @@ import knightBlack from './assets/pieces/stranger_b.webp'
 import knightWhite from './assets/pieces/captain_w.webp'
 import rookBlack from './assets/pieces/metal_b.webp'
 import rookWhite from './assets/pieces/shady_w.webp'
+import { toRaw } from 'vue'
 
+/**
+ * Types of tiles
+ */
 export enum Types {
   Grass,
   WaterCorner,
@@ -31,26 +35,38 @@ export enum Types {
   Log
 }
 
+/**
+ * Types of areas available
+ */
 export enum Areas {
   Regular,
   None
 }
 
+/**
+ * The various "professions" of the pieces and their value
+ */
 export enum Professions {
-  Pawn,
-  King,
-  Archer,
-  Queen,
-  Bishop,
-  Knight,
-  Rook
+  Pawn = 10,
+  King = 9999,
+  Archer = 26,
+  Queen = 50,
+  Bishop = 27,
+  Knight = 25,
+  Rook = 30
 }
 
+/**
+ * The teams available
+ */
 export enum Teams {
   White = -1,
   Black = 1
 }
 
+/**
+ * Class representing the tiles on the board.
+ */
 export class GameTile {
   rotate
   type
@@ -90,6 +106,9 @@ export class GameTile {
   }
 }
 
+/**
+ * Class representing the pieces on the board.
+ */
 export class GamePiece {
   team
   profession
@@ -157,6 +176,9 @@ export class GamePiece {
   }
 }
 
+/**
+ * Contains the state of the game and methods for manipulating the board
+ */
 export class GameBoard {
   turn: Teams = Teams.White
   width
@@ -169,6 +191,12 @@ export class GameBoard {
     this.tiles = tiles
     this.pieces = pieces
   }
+  /**
+   * Get a tile at x y
+   * @param x The x coordinate
+   * @param y The y coordinate
+   * @returns The tile at the x and y coordinate
+   */
   getTile = (x: number, y: number) => {
     const tile = this.tiles.find((p) => p.x === x && p.y === y)
     if (tile && tile.area !== Areas.None) {
@@ -177,6 +205,14 @@ export class GameBoard {
       return undefined
     }
   }
+  /**
+   * Adds a tile to the game
+   * @param x The x coordinate
+   * @param y The y coordinate
+   * @param type Type of tile
+   * @param area Type of area
+   * @param rotate How much rotation
+   */
   addTile = (
     x: number,
     y: number,
@@ -186,25 +222,86 @@ export class GameBoard {
   ) => {
     this.tiles.push(new GameTile(x, y, this, type, area, rotate))
   }
-  updateTile = (x: number, y: number, tile: GameTile) => {
-    this.tiles[x * y - 1] = tile
-  }
+  /**
+   * Get a piece
+   * @param x The x coordinate
+   * @param y The y coordinate
+   * @returns The piece at x y
+   */
   getPiece = (x: number, y: number) => {
     return this.pieces.find((p) => p.x === x && p.y === y)
   }
+  /**
+   * Add a piece to game board
+   * @param x The x coordinate
+   * @param y The y coordinate
+   * @param team The team the piece belongs to
+   * @param profession The type of piece
+   */
   addPiece = (x: number, y: number, team: Teams, profession: Professions) => {
     this.pieces.push(new GamePiece(x, y, this, team, profession))
   }
+  /**
+   * Remove a piece from the board
+   * @param x The x coordinate
+   * @param y The y coordinate
+   */
   removePiece = (x: number, y: number) => {
     const index = this.pieces.findIndex((p) => p.x === x && p.y === y)
     console.log(this.pieces[index])
     this.pieces.splice(index, 1)
   }
+  /**
+   * Reset any highlighted tiles to their non-highlighted state
+   */
   resetHighlights = () => {
     for (const h of this.tiles.filter((o) => o.highlight)) {
       h.highlight = false
     }
   }
+  /**
+   * Calculate the value of the pieces of the specified team
+   * @param checkTeam The team
+   * @param checkPieces The pieces
+   * @returns The total value of the pieces
+   */
+  calculateValue(checkTeam: number, checkPieces: GamePiece[]) {
+    return checkPieces
+      .filter((p) => p.team === checkTeam)
+      .map((p) => p.profession)
+      .reduce((a, b) => a + b)
+  }
+  cloneBoard = (source: GameBoard = this) => {
+    console.log('value', this.calculateValue(this.turn, this.pieces))
+    // "copy" is required due to vue proxy
+    const clone: GameBoard = new GameBoard(this.width, this.height, [], [])
+    clone.tiles = [...source.tiles].map((t) => {
+      return new GameTile(t.x, t.y, clone, t.type, t.area, t.rotate)
+    })
+    clone.pieces = [...source.pieces].map((p) => {
+      return new GamePiece(p.x, p.y, clone, p.team, p.profession)
+    })
+    return clone
+  }
+  simpleAI = () => {
+    console.log('value', this.calculateValue(this.turn, this.pieces))
+    const simulation = this.cloneBoard()
+    const best: { fromX: number; fromY: number; toX: number; toY: number } | null = null
+    simulation.pieces
+      .filter((p) => p.team === simulation.turn)
+      .reduce((a, b) => {
+        this.cloneBoard(simulation).showMoves(b.x, b.y)
+      })
+    return best
+  }
+  /**
+   * Move a piece on the board and removes piece on collision.
+   * @param fromX Move from this coordinate
+   * @param fromY Move from this coordinate
+   * @param toX Move to this coordinate
+   * @param toY Move to this coordinate
+   * @returns All the pieces
+   */
   movePiece = (fromX: number, fromY: number, toX: number, toY: number) => {
     const piece = this.getPiece(fromX, fromY)
     if (piece) {
@@ -274,6 +371,13 @@ export class GameBoard {
       options.push(tile)
     }
   }
+  /**
+   * Checks in xy direction until top
+   * @param options The tiles to check to mark for availability
+   * @param target The piece to check
+   * @param x Offset in x direction
+   * @param y Offset in y direction
+   */
   checkDirection = (options: GameTile[], target: GamePiece, x: number = 0, y: number = 0): void => {
     for (let i = 1; i < this.tiles.length; i++) {
       const tile = this.getTile(target.x + x * i, target.y + y * i)
@@ -291,6 +395,14 @@ export class GameBoard {
       }
     }
   }
+  /**
+   * Moves {limit} tiles in xy direction or until stop
+   * @param options The tiles to check to mark for availability
+   * @param target The piece to check
+   * @param x Offset in x direction
+   * @param y Offset in y direction
+   * @param limit Maximum movement
+   */
   checkRush = (
     options: GameTile[],
     target: GamePiece,
@@ -328,6 +440,11 @@ export class GameBoard {
       options.push(tile)
     }
   }
+  /**
+   * Checks if there are any obstacles to jump over
+   * @param options The tiles to check to mark for availability
+   * @param target The piece to check
+   */
   checkLeap = (options: GameTile[], target: GamePiece): void => {
     const tile = this.getTile(target.x + 2 * target.team, target.y)
     if (
@@ -338,6 +455,12 @@ export class GameBoard {
       options.push(tile)
     }
   }
+  /**
+   * Highlights the tiles available for movement
+   * @param x The x-coordinate for the piece to check the moves of
+   * @param y The y-coordinate for the piece to check the moves of
+   * @returns Highlighted tiles or false if no moves
+   */
   showMoves = (x: number, y: number): GameTile[] | false => {
     this.resetHighlights()
     const target = this.getPiece(x, y)

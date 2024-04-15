@@ -50,8 +50,6 @@ for (let x = 1; x <= board.value.width; x++) {
   }
 }
 
-console.log(board.value.tiles.length)
-
 for (let i = 2; i < 8; i++) {
   board.value.addPiece(3, i + 1, Teams.Black, Professions.Pawn)
 }
@@ -82,7 +80,6 @@ board.value.addPiece(13, 9, Teams.White, Professions.Archer)
 
 const handleMove = (toX: number, toY: number) => {
   if (active && board.value.getTile(toX, toY)?.highlight) {
-    board.value.turn = -board.value.turn
     const fromX: number = active.x
     const fromY: number = active.y
     board.value.pieces = board.value.movePiece(active.x, active.y, toX, toY)
@@ -101,6 +98,8 @@ const handleMove = (toX: number, toY: number) => {
       }
     )
     active = undefined
+    board.value.turn = -board.value.turn
+    board.value.simpleAI()
   } else {
     active = undefined
     board.value.resetHighlights()
