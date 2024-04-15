@@ -176,6 +176,23 @@ export class GamePiece {
   }
 }
 
+export class AIAction {
+  id: number
+  fromX: number
+  fromY: number
+  toX: number
+  toY: number
+  score: number
+  constructor(id: number, fromX: number, fromY: number, toX: number, toY: number, score: number) {
+    this.id = id
+    this.fromX = fromX
+    this.fromY = fromY
+    this.toX = toX
+    this.toY = toY
+    this.score = score
+  }
+}
+
 /**
  * Contains the state of the game and methods for manipulating the board
  */
@@ -272,7 +289,6 @@ export class GameBoard {
       .reduce((a, b) => a + b)
   }
   cloneBoard = (source: GameBoard = this) => {
-    console.log('value', this.calculateValue(this.turn, this.pieces))
     // "copy" is required due to vue proxy
     const clone: GameBoard = new GameBoard(this.width, this.height, [], [])
     clone.tiles = [...source.tiles].map((t) => {
@@ -283,16 +299,42 @@ export class GameBoard {
     })
     return clone
   }
-  simpleAI = () => {
-    console.log('value', this.calculateValue(this.turn, this.pieces))
-    const simulation = this.cloneBoard()
-    const best: { fromX: number; fromY: number; toX: number; toY: number } | null = null
-    simulation.pieces
-      .filter((p) => p.team === simulation.turn)
-      .reduce((a, b) => {
-        this.cloneBoard(simulation).showMoves(b.x, b.y)
-      })
-    return best
+
+  simpleAI = (): AIAction | null => {
+    const clone = this.cloneBoard(this)
+    let bestList: AIAction[] = []
+    for (const p of clone.pieces.filter((p) => p.team === this.turn)) {
+      const tilesWithHighlights = clone.showMoves(p.x, p.y)
+      if (tilesWithHighlights) {
+        clone.tiles = tilesWithHighlights
+        for (const t of clone.tiles.filter((t) => t.highlight)) {
+          const cloneClone = this.cloneBoard()
+          cloneClone.pieces = cloneClone.movePiece(p.x, p.y, t.x, t.y)
+          const test = {
+            id: p.id,
+            fromX: p.x,
+            fromY: p.y,
+            toX: t.x,
+            toY: t.y,
+            score:
+              cloneClone.calculateValue(cloneClone.turn, cloneClone.pieces) -
+              cloneClone.calculateValue(-cloneClone.turn, cloneClone.pieces)
+          }
+          if (bestList.length && bestList[0].score > test.score) {
+            console.log('clear')
+            bestList = []
+            bestList.push(test)
+          } else if (!bestList.length || bestList[0].score === test.score) {
+            bestList.push(test)
+          }
+        }
+      }
+    }
+    if (bestList.length) {
+      console.log(bestList.map((m) => m.score))
+      return bestList[Math.floor(Math.random() * bestList.length)]
+    }
+    return null
   }
   /**
    * Move a piece on the board and removes piece on collision.
@@ -318,7 +360,7 @@ export class GameBoard {
       this.resetHighlights()
       return [...this.pieces]
     } else {
-      console.error('Piece is undefined, cannot move.')
+      console.error(fromX, fromY, 'Piece is undefined, cannot move.')
       return this.pieces
     }
   }

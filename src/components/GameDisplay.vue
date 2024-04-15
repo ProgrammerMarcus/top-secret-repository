@@ -78,6 +78,20 @@ board.value.addPiece(14, 3, Teams.White, Professions.Knight)
 board.value.addPiece(13, 2, Teams.White, Professions.Archer)
 board.value.addPiece(13, 9, Teams.White, Professions.Archer)
 
+board.value.addPiece(8, 6, Teams.White, Professions.King)
+board.value.addPiece(7, 6, Teams.Black, Professions.King)
+
+const handleAI = () => {
+  const action = board.value.simpleAI()
+  if (action) {
+    console.log(action.fromX, action.fromY, action.toX, action.toY)
+    board.value.movePiece(action.fromX, action.fromY, action.toX, action.toY)
+    board.value.turn = -board.value.turn
+  } else {
+    alert('you won!')
+  }
+}
+
 const handleMove = (toX: number, toY: number) => {
   if (active && board.value.getTile(toX, toY)?.highlight) {
     const fromX: number = active.x
@@ -99,7 +113,7 @@ const handleMove = (toX: number, toY: number) => {
     )
     active = undefined
     board.value.turn = -board.value.turn
-    board.value.simpleAI()
+    handleAI()
   } else {
     active = undefined
     board.value.resetHighlights()
