@@ -86,6 +86,21 @@ const handleAI = () => {
   if (action) {
     console.log(action.fromX, action.fromY, action.toX, action.toY)
     board.value.movePiece(action.fromX, action.fromY, action.toX, action.toY)
+    console.log(`piece_${action.id}`)
+    document.getElementById(`piece_${action.id}`)?.animate(
+      [
+        // keyframes
+        {
+          transform: `translate(${(action.fromX - action.toX) * size.value}px, ${(action.fromY - action.toY) * size.value}px)`
+        },
+        { transform: `translate(0px, 0px)` }
+      ],
+      {
+        // timing options
+        duration: 200,
+        iterations: 1
+      }
+    )
     board.value.turn = -board.value.turn
   } else {
     alert('you won!')

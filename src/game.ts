@@ -122,14 +122,15 @@ export class GamePiece {
     y: number,
     board: GameBoard,
     team: Teams = Teams.White,
-    profession: Professions = Professions.Pawn
+    profession: Professions = Professions.Pawn,
+    id: number = board.pieces.length
   ) {
     this.team = team
     this.x = x
     this.y = y
     this.profession = profession
     this.board = board
-    this.id = board.pieces.length
+    this.id = id
     if (profession === Professions.Pawn) {
       if (this.team === Teams.White) {
         this.image = pawnWhite
@@ -295,7 +296,7 @@ export class GameBoard {
       return new GameTile(t.x, t.y, clone, t.type, t.area, t.rotate)
     })
     clone.pieces = [...source.pieces].map((p) => {
-      return new GamePiece(p.x, p.y, clone, p.team, p.profession)
+      return new GamePiece(p.x, p.y, clone, p.team, p.profession, p.id)
     })
     return clone
   }
@@ -303,11 +304,11 @@ export class GameBoard {
   simpleAI = (): AIAction | null => {
     const clone = this.cloneBoard(this)
     let bestList: AIAction[] = []
-    for (const p of clone.pieces.filter((p) => p.team === this.turn)) {
+    for (const p of clone.pieces.filter((p: GamePiece) => p.team === this.turn)) {
       const tilesWithHighlights = clone.showMoves(p.x, p.y)
       if (tilesWithHighlights) {
         clone.tiles = tilesWithHighlights
-        for (const t of clone.tiles.filter((t) => t.highlight)) {
+        for (const t of clone.tiles.filter((t: GameTile) => t.highlight)) {
           const cloneClone = this.cloneBoard()
           cloneClone.pieces = cloneClone.movePiece(p.x, p.y, t.x, t.y)
           const test = {
