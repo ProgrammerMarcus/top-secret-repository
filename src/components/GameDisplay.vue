@@ -78,6 +78,9 @@ board.value.addPiece(14, 3, Teams.White, Professions.Knight)
 board.value.addPiece(13, 2, Teams.White, Professions.Archer)
 board.value.addPiece(13, 9, Teams.White, Professions.Archer)
 
+board.value.addPiece(7, 6, Teams.Black, Professions.King)
+board.value.addPiece(8, 6, Teams.White, Professions.King)
+
 const handleAI = () => {
   const action = board.value.simpleAI()
   if (action) {
@@ -98,9 +101,11 @@ const handleAI = () => {
         iterations: 1
       }
     )
-    board.value.turn = -board.value.turn
+    if (!board.value.gameOver) {
+      board.value.turn = -board.value.turn
+    }
   } else {
-    alert('you won!')
+    console.error('AI is confused?')
   }
 }
 
@@ -124,8 +129,10 @@ const handleMove = (toX: number, toY: number) => {
       }
     )
     active = undefined
-    board.value.turn = -board.value.turn
-    handleAI()
+    if (!board.value.gameOver) {
+      board.value.turn = -board.value.turn
+      handleAI()
+    }
   } else {
     active = undefined
     board.value.resetHighlights()
@@ -134,10 +141,12 @@ const handleMove = (toX: number, toY: number) => {
 }
 
 const showMoves = (x: number, y: number) => {
-  const target = board.value.showMoves(x, y)
-  if (target) {
-    active = board.value.getPiece(x, y)
-    board.value.tiles = target
+  if (!board.value.gameOver) {
+    const target = board.value.showMoves(x, y)
+    if (target) {
+      active = board.value.getPiece(x, y)
+      board.value.tiles = target
+    }
   }
 }
 </script>
@@ -178,6 +187,13 @@ const showMoves = (x: number, y: number) => {
       />
     </div>
   </div>
+  <div
+    v-if="board.gameOver"
+    class="game-over"
+    :class="{ black: board.turn === Teams.Black, white: board.turn === Teams.White }"
+  >
+    {{ `${board.turn === 1 ? 'RED' : 'BLUE'} WINS!` }}
+  </div>
 </template>
 
 <style scoped>
@@ -217,13 +233,35 @@ const showMoves = (x: number, y: number) => {
   }
 }
 
-@keyframes highlight {
+@keyframes appear {
   from {
-    filter: brightness(1.4);
+    width: 1svw;
   }
   to {
-    filter: brightness(1.2);
+    width: 30svw;
   }
+}
+
+.game-over {
+  display: grid;
+  place-content: center;
+  position: absolute;
+  top: calc(50% - 6.5svh);
+  right: calc(50% - 15svw);
+  width: 30svw;
+  height: 13svh;
+  font-size: 4svw;
+  text-align: center;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.3);
+  animation: 0.5s 1 forwards appear;
+  pointer-events: none;
+  text-wrap: nowrap;
+}
+.game-over.black {
+  background-color: rgba(255, 70, 70, 0.7);
+}
+.game-over.white {
+  background-color: rgba(97, 118, 255, 0.7);
 }
 
 @keyframes highlight {

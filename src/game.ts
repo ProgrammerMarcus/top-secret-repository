@@ -203,6 +203,7 @@ export class GameBoard {
   height
   tiles: GameTile[]
   pieces: GamePiece[]
+  gameOver: boolean = false
   constructor(width: number, height: number, tiles: GameTile[] = [], pieces: GamePiece[] = []) {
     this.width = width
     this.height = height
@@ -267,6 +268,9 @@ export class GameBoard {
   removePiece = (x: number, y: number) => {
     const index = this.pieces.findIndex((p) => p.x === x && p.y === y)
     console.log(this.pieces[index])
+    if (this.pieces[index].profession === Professions.King) {
+      this.gameOver = true
+    }
     this.pieces.splice(index, 1)
   }
   /**
@@ -289,6 +293,7 @@ export class GameBoard {
       .map((p) => p.profession)
       .reduce((a, b) => a + b)
   }
+
   cloneBoard = (source: GameBoard = this) => {
     // "copy" is required due to vue proxy
     const clone: GameBoard = new GameBoard(this.width, this.height, [], [])
