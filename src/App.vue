@@ -1,7 +1,5 @@
-<script setup lang="ts">
-import GameDisplay from './components/GameDisplay.vue'
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <GameDisplay></GameDisplay>
+  <RouterView />
 </template>
