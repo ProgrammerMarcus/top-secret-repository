@@ -1,198 +1,7 @@
-// tiles
-import grass from './assets/tiles/tile_grass.png'
-import waterCorner from './assets/tiles/tile_water_corner.png'
-import waterMiddle from './assets/tiles/tile_water_middle.png'
-import bush from './assets/tiles/tile_bush.png'
-import rock from './assets/tiles/tile_rock.png'
-import log from './assets/tiles/tile_log.png'
-
-// pieces
-import pawnBlack from './assets/pieces/pawn_b.webp'
-import pawnWhite from './assets/pieces/farmer_w.webp'
-import kingBlack from './assets/pieces/fire_b.webp'
-import kingWhite from './assets/pieces/king_w.webp'
-import archerBlack from './assets/pieces/archer_b.webp'
-import archerWhite from './assets/pieces/leaf_w.webp'
-import queenBlack from './assets/pieces/aristocrat_b.webp'
-import queenWhite from './assets/pieces/princess_w.webp'
-import bishopBlack from './assets/pieces/jester_b.webp'
-import bishopWhite from './assets/pieces/priestess_w.webp'
-import knightBlack from './assets/pieces/stranger_b.webp'
-import knightWhite from './assets/pieces/captain_w.webp'
-import rookBlack from './assets/pieces/metal_b.webp'
-import rookWhite from './assets/pieces/shady_w.webp'
-import { toRaw } from 'vue'
-
-/**
- * Types of tiles
- */
-export enum Types {
-  Grass,
-  WaterCorner,
-  WaterMiddle,
-  Rock,
-  Bush,
-  Log
-}
-
-/**
- * Types of areas available
- */
-export enum Areas {
-  Regular,
-  None
-}
-
-/**
- * The various "professions" of the pieces and their value
- */
-export enum Professions {
-  Pawn = 10,
-  King = 9999,
-  Archer = 26,
-  Queen = 50,
-  Bishop = 27,
-  Knight = 25,
-  Rook = 30
-}
-
-/**
- * The teams available
- */
-export enum Teams {
-  White = -1,
-  Black = 1
-}
-
-/**
- * Class representing the tiles on the board.
- */
-export class GameTile {
-  rotate
-  type
-  area
-  highlight = false
-  board
-  x
-  y
-  image
-  constructor(
-    x: number,
-    y: number,
-    board: GameBoard,
-    type: Types = Types.Grass,
-    area: Areas = Areas.Regular,
-    rotate: number = 0
-  ) {
-    this.rotate = rotate
-    this.type = type
-    this.board = board
-    this.x = x
-    this.y = y
-    this.area = area
-    if (type === Types.WaterCorner) {
-      this.image = waterCorner
-    } else if (type === Types.WaterMiddle) {
-      this.image = waterMiddle
-    } else if (type === Types.Rock) {
-      this.image = rock
-    } else if (type === Types.Log) {
-      this.image = log
-    } else if (type === Types.Bush) {
-      this.image = bush
-    } else {
-      this.image = grass
-    }
-  }
-}
-
-/**
- * Class representing the pieces on the board.
- */
-export class GamePiece {
-  team
-  profession
-  x
-  y
-  image
-  board
-  id
-  constructor(
-    x: number,
-    y: number,
-    board: GameBoard,
-    team: Teams = Teams.White,
-    profession: Professions = Professions.Pawn,
-    id: number = board.pieces.length
-  ) {
-    this.team = team
-    this.x = x
-    this.y = y
-    this.profession = profession
-    this.board = board
-    this.id = id
-    if (profession === Professions.Pawn) {
-      if (this.team === Teams.White) {
-        this.image = pawnWhite
-      } else if (this.team === Teams.Black) {
-        this.image = pawnBlack
-      }
-    } else if (profession === Professions.King) {
-      if (this.team === Teams.White) {
-        this.image = kingWhite
-      } else if (this.team === Teams.Black) {
-        this.image = kingBlack
-      }
-    } else if (profession === Professions.Archer) {
-      if (this.team === Teams.White) {
-        this.image = archerWhite
-      } else if (this.team === Teams.Black) {
-        this.image = archerBlack
-      }
-    } else if (profession === Professions.Queen) {
-      if (this.team === Teams.White) {
-        this.image = queenWhite
-      } else if (this.team === Teams.Black) {
-        this.image = queenBlack
-      }
-    } else if (profession === Professions.Bishop) {
-      if (this.team === Teams.White) {
-        this.image = bishopWhite
-      } else if (this.team === Teams.Black) {
-        this.image = bishopBlack
-      }
-    } else if (profession === Professions.Knight) {
-      if (this.team === Teams.White) {
-        this.image = knightWhite
-      } else if (this.team === Teams.Black) {
-        this.image = knightBlack
-      }
-    } else if (profession === Professions.Rook) {
-      if (this.team === Teams.White) {
-        this.image = rookWhite
-      } else if (this.team === Teams.Black) {
-        this.image = rookBlack
-      }
-    }
-  }
-}
-
-export class AIAction {
-  id: number
-  fromX: number
-  fromY: number
-  toX: number
-  toY: number
-  score: number
-  constructor(id: number, fromX: number, fromY: number, toX: number, toY: number, score: number) {
-    this.id = id
-    this.fromX = fromX
-    this.fromY = fromY
-    this.toX = toX
-    this.toY = toY
-    this.score = score
-  }
-}
+import { Areas, Professions, Teams, Types } from '../enums'
+import { GameTile } from './GameTile'
+import { GamePiece } from './GamePiece'
+import type { AIAction } from './AIAction'
 
 /**
  * Contains the state of the game and methods for manipulating the board
@@ -239,7 +48,7 @@ export class GameBoard {
     area: Areas = Areas.Regular,
     rotate: number = 0
   ) => {
-    this.tiles.push(new GameTile(x, y, this, type, area, rotate))
+    this.tiles.push(new GameTile(x, y, type, area, rotate))
   }
   /**
    * Get a piece
@@ -258,7 +67,7 @@ export class GameBoard {
    * @param profession The type of piece
    */
   addPiece = (x: number, y: number, team: Teams, profession: Professions) => {
-    this.pieces.push(new GamePiece(x, y, this, team, profession))
+    this.pieces.push(new GamePiece(x, y, team, profession))
   }
   /**
    * Remove a piece from the board
@@ -298,10 +107,10 @@ export class GameBoard {
     // "copy" is required due to vue proxy
     const clone: GameBoard = new GameBoard(this.width, this.height, [], [])
     clone.tiles = [...source.tiles].map((t) => {
-      return new GameTile(t.x, t.y, clone, t.type, t.area, t.rotate)
+      return new GameTile(t.x, t.y, t.type, t.area, t.rotate)
     })
     clone.pieces = [...source.pieces].map((p) => {
-      return new GamePiece(p.x, p.y, clone, p.team, p.profession, p.id)
+      return new GamePiece(p.x, p.y, p.team, p.profession, p.id)
     })
     return clone
   }
@@ -582,5 +391,3 @@ export class GameBoard {
     }
   }
 }
-
-export default GameBoard

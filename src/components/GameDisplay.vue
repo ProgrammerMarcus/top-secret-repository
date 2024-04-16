@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import GameOver from './GameOver.vue'
+import { Types, Areas, Professions, Teams } from '../assets/code/enums'
 import { ref, onMounted, onUnmounted } from 'vue'
-import GameBoard, { Areas, GamePiece, Professions, Teams, Types } from '../game'
+import { GameBoard } from '@/assets/code/classes/GameBoard'
+import { GamePiece } from '@/assets/code/classes/GamePiece'
 const board = ref(new GameBoard(15, 10))
 let active: undefined | GamePiece = undefined
 const size = ref(Math.floor(window.innerHeight / 10))
@@ -187,83 +190,10 @@ const showMoves = (x: number, y: number) => {
       />
     </div>
   </div>
-  <div
-    v-if="board.gameOver"
-    class="game-over"
-    :class="{ black: board.turn === Teams.Black, white: board.turn === Teams.White }"
-  >
-    {{ `${board.turn === 1 ? 'RED' : 'BLUE'} WINS!` }}
-  </div>
+  <GameOver v-if="board.gameOver" :team="board.turn" />
 </template>
 
 <style scoped>
-.board {
-  display: grid;
-  margin: auto;
-  background-color: rgb(99, 155, 255);
-}
-.tiles {
-  position: relative;
-  top: 0;
-  left: 0;
-  display: grid;
-  place-content: center;
-  grid-area: 1 / 1;
-  grid-template: v-bind('`repeat(${board.height}, ${size}px) / repeat(${board.width}, ${size}px)`');
-  .tile {
-    height: v-bind('`${size}px`');
-  }
-}
-.pieces {
-  position: relative;
-  top: 0;
-  left: 0;
-  display: grid;
-  place-content: center;
-  pointer-events: none;
-  grid-area: 1 / 1;
-  grid-template: v-bind('`repeat(${board.height}, ${size}px) / repeat(${board.width}, ${size}px)`');
-  .piece {
-    margin: auto;
-    height: v-bind('`${size}px`');
-    pointer-events: all;
-  }
-  .piece.clickthrough {
-    pointer-events: none;
-  }
-}
-
-@keyframes appear {
-  from {
-    width: 1svw;
-  }
-  to {
-    width: 30svw;
-  }
-}
-
-.game-over {
-  display: grid;
-  place-content: center;
-  position: absolute;
-  top: calc(50% - 6.5svh);
-  right: calc(50% - 15svw);
-  width: 30svw;
-  height: 13svh;
-  font-size: 4svw;
-  text-align: center;
-  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.3);
-  animation: 0.5s 1 forwards appear;
-  pointer-events: none;
-  text-wrap: nowrap;
-}
-.game-over.black {
-  background-color: rgba(255, 70, 70, 0.7);
-}
-.game-over.white {
-  background-color: rgba(97, 118, 255, 0.7);
-}
-
 @keyframes highlight {
   from {
     filter: brightness(1.4);
@@ -272,22 +202,60 @@ const showMoves = (x: number, y: number) => {
     filter: brightness(1.2);
   }
 }
-
-.highlight {
-  animation: 0.5s infinite alternate highlight;
-}
-.active:hover {
-  filter: brightness(1.4);
-}
-.active.white {
-  background-image: url('../assets/select.png');
-  background-size: contain;
-}
-.active.black {
-  background-image: url('../assets/select_2.png');
-  background-size: contain;
-}
-.selected {
-  animation: 0.5s infinite alternate highlight;
+.board {
+  display: grid;
+  margin: auto;
+  background-color: rgb(99, 155, 255);
+  .tiles {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-content: center;
+    grid-area: 1 / 1;
+    grid-template: v-bind(
+      '`repeat(${board.height}, ${size}px) / repeat(${board.width}, ${size}px)`'
+    );
+    .tile {
+      height: v-bind('`${size}px`');
+    }
+    .tile.highlight {
+      animation: 0.5s infinite alternate highlight;
+    }
+  }
+  .pieces {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-content: center;
+    pointer-events: none;
+    grid-area: 1 / 1;
+    grid-template: v-bind(
+      '`repeat(${board.height}, ${size}px) / repeat(${board.width}, ${size}px)`'
+    );
+    .piece {
+      margin: auto;
+      height: v-bind('`${size}px`');
+      pointer-events: all;
+    }
+    .piece.clickthrough {
+      pointer-events: none;
+    }
+    .piece.active:hover {
+      filter: brightness(1.4);
+    }
+    .piece.active.white {
+      background-image: url('../assets/select.png');
+      background-size: contain;
+    }
+    .piece.active.black {
+      background-image: url('../assets/select_2.png');
+      background-size: contain;
+    }
+    .piece.selected {
+      animation: 0.5s infinite alternate highlight;
+    }
+  }
 }
 </style>
