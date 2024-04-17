@@ -7,6 +7,9 @@ import waterMiddle from '@/assets/tiles/tile_water_middle.png'
 import bush from '@/assets/tiles/tile_bush.png'
 import rock from '@/assets/tiles/tile_rock.png'
 import log from '@/assets/tiles/tile_log.png'
+import stone from '@/assets/tiles/tile_stone.png'
+import waterStoneCorner from '@/assets/tiles/tile_water_stone_corner.png'
+import waterStoneMiddle from '@/assets/tiles/tile_water_stone_middle.png'
 
 /**
  * Class representing the tiles on the board.
@@ -41,6 +44,12 @@ export class GameTile {
       this.image = log
     } else if (type === Types.Bush) {
       this.image = bush
+    } else if (type === Types.Stone) {
+      this.image = stone
+    } else if (type === Types.WaterStoneCorner) {
+      this.image = waterStoneCorner
+    } else if (type === Types.WaterStoneMiddle) {
+      this.image = waterStoneMiddle
     } else {
       this.image = grass
     }

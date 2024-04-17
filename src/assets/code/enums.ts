@@ -7,7 +7,10 @@ export enum Types {
   WaterMiddle,
   Rock,
   Bush,
-  Log
+  Log,
+  Stone,
+  WaterStoneMiddle,
+  WaterStoneCorner
 }
 
 /**

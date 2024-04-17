@@ -7,7 +7,7 @@ import GameHome from './components/GameHome.vue'
 
 const routes = [
   { path: '/top-secret-repository/', component: GameHome, name: 'Home' },
-  { path: '/top-secret-repository/game', component: GameDisplay, name: 'Game' }
+  { path: '/top-secret-repository/game/:map', component: GameDisplay, name: 'Game' }
 ]
 
 const router = createRouter({
