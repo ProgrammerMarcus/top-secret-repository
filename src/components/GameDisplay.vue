@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import GameOver from './GameOver.vue'
+import QuitGame from './QuitGame.vue'
 import { Teams } from '../assets/code/enums'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { GamePiece } from '@/assets/code/classes/GamePiece'
@@ -23,10 +24,18 @@ switch (map) {
 
 const board = ref(loaded)
 let active: undefined | GamePiece = undefined
-const size = ref(Math.floor(window.innerHeight / 10))
+const size = ref(
+  Math.min(
+    Math.floor((window.innerHeight - 10) / board.value.height),
+    Math.floor((window.innerWidth - 10) / board.value.width)
+  )
+)
 
 const updateSize = () => {
-  size.value = Math.floor(window.innerHeight / 10)
+  size.value = Math.min(
+    Math.floor((window.innerHeight - 10) / board.value.height),
+    Math.floor((window.innerWidth - 10) / board.value.width)
+  )
 }
 
 onMounted(() => {
@@ -144,6 +153,7 @@ const showMoves = (x: number, y: number) => {
     </div>
   </div>
   <GameOver v-if="board.gameOver" :team="board.turn" />
+  <QuitGame class="quit" />
 </template>
 
 <style scoped>
@@ -157,9 +167,9 @@ const showMoves = (x: number, y: number) => {
 }
 .board {
   display: grid;
-  margin: auto;
   background-color: rgb(99, 155, 255);
   height: 100svh;
+  width: 100svw;
   .tiles {
     position: relative;
     top: 0;
@@ -211,5 +221,10 @@ const showMoves = (x: number, y: number) => {
       animation: 0.5s infinite alternate highlight;
     }
   }
+}
+.quit {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 </style>

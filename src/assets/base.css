@@ -20,7 +20,7 @@ body {
   image-rendering: pixelated;
   margin: 0;
   min-height: 100vh;
-  min-width: 100vh;
+  min-width: 100vw;
   color: white;
   background: #333;
   transition:

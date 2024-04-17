@@ -7,24 +7,41 @@ const maps = [classic, classicPlus]
 </script>
 
 <template>
-  <div class="options">
-    <MapOption
-      v-for="map of maps"
-      :key="map.identifier"
-      :name="map.name"
-      :image="map.image"
-      :id="map.identifier"
-    />
+  <div class="container">
+    <h2 class="info">Maps:</h2>
+    <div class="options">
+      <MapOption
+        v-for="map of maps"
+        :key="map.identifier"
+        :name="map.name"
+        :image="map.image"
+        :id="map.identifier"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped>
+.info {
+  font-size: 2.3rem;
+  font-family: 'SilkscreenBold';
+  text-align: center;
+}
+
+.container {
+  background-image: url(/src/assets/menu/stone.webp);
+  background-size: 128px;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+  padding: 5px 3px 40px 3px;
+  max-width: calc(100svw - 60px);
+  margin: auto;
+  width: 720px;
+}
+
 .options {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  background-image: url(/src/assets/menu/stone.webp);
-  background-size: 128px;
-  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+  gap: 20px;
 }
 </style>

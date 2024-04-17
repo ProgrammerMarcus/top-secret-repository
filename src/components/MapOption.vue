@@ -16,8 +16,6 @@ defineProps({
 
 <style scoped>
 .option {
-  width: 20rem;
-  height: 20rem;
   display: grid;
   place-content: center;
   margin: auto;

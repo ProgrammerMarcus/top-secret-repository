@@ -36,8 +36,8 @@ import title from '@/assets/menu/title.webp'
 .home {
   background-image: url(/src/assets/menu/background.webp);
   background-size: 300svh;
-  width: 100svw;
-  height: 100svh;
+  min-width: 100svw;
+  min-height: 100svh;
   animation: 40s infinite alternate linear hover;
   background-repeat: no-repeat;
   display: grid;
@@ -54,25 +54,12 @@ import title from '@/assets/menu/title.webp'
   font-family: 'SilkscreenBold';
   display: grid;
   place-content: center;
-  margin-bottom: 10px;
+  margin: 10px;
 }
 
-.btn {
-  color: rgb(255, 255, 255);
-  text-decoration: none;
-  font-size: 1.7rem;
-  background-image: url(/src/assets/menu/stone.webp);
-  background-size: 128px;
-  width: 20rem;
-  height: 4rem;
-  display: grid;
-  place-content: center;
-  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
-  margin: auto;
-  transition: 0.2s;
-}
-
-.btn:hover {
-  filter: brightness(1.2);
+.title {
+  width: 100%;
+  max-width: 100%;
+  min-height: 4rem;
 }
 </style>
