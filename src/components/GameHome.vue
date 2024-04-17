@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import MapSelect from './MapSelect.vue'
 import title from '@/assets/menu/title.webp'
 </script>
 
@@ -6,7 +7,7 @@ import title from '@/assets/menu/title.webp'
   <div class="home">
     <main class="menu">
       <h1 class="header"><img :src="title" alt="CHESS 5" class="title" /></h1>
-      <RouterLink class="btn" to="game">NEW GAME</RouterLink>
+      <MapSelect />
     </main>
   </div>
 </template>
@@ -51,6 +52,9 @@ import title from '@/assets/menu/title.webp'
 
 .header {
   font-family: 'SilkscreenBold';
+  display: grid;
+  place-content: center;
+  margin-bottom: 10px;
 }
 
 .btn {

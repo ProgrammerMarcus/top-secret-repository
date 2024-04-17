@@ -1,10 +1,12 @@
 import { GameBoard } from '@/assets/code/classes/GameBoard'
 import type { GameMap } from '@/assets/code/types/GameMap'
 import { Types, Professions, Teams } from '@/assets/code/enums'
+import mapImage from '@/assets/menu/maps/classic.webp'
 
 export const classic: GameMap = {
-  image: 'placeholder',
+  image: mapImage,
   name: 'Classic',
+  identifier: 1,
   generate: function (): GameBoard {
     const board = new GameBoard(8, 8)
     for (let x = 1; x <= board.width; x++) {
