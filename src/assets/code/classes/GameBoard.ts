@@ -2,6 +2,7 @@ import { Areas, Professions, Teams, Types } from '../enums'
 import { GameTile } from './GameTile'
 import { GamePiece } from './GamePiece'
 import type { AIAction } from './AIAction'
+import { runMiniMax } from './MiniMax'
 
 /**
  * Contains the state of the game and methods for manipulating the board
@@ -76,7 +77,6 @@ export class GameBoard {
    */
   removePiece = (x: number, y: number) => {
     const index = this.pieces.findIndex((p) => p.x === x && p.y === y)
-    console.log(this.pieces[index])
     if (this.pieces[index].profession === Professions.King) {
       this.gameOver = true
     }
@@ -115,6 +115,10 @@ export class GameBoard {
     return clone
   }
 
+  complexAI = (): AIAction | null => {
+    return runMiniMax(this)
+  }
+
   simpleAI = (): AIAction | null => {
     const clone = this.cloneBoard(this)
     let bestList: AIAction[] = []
@@ -136,7 +140,6 @@ export class GameBoard {
               cloneClone.calculateValue(-cloneClone.turn, cloneClone.pieces)
           }
           if (bestList.length && bestList[0].score > test.score) {
-            console.log('clear')
             bestList = []
             bestList.push(test)
           } else if (!bestList.length || bestList[0].score === test.score) {
@@ -146,7 +149,6 @@ export class GameBoard {
       }
     }
     if (bestList.length) {
-      console.log(bestList.map((m) => m.score))
       return bestList[Math.floor(Math.random() * bestList.length)]
     }
     return null
@@ -325,9 +327,9 @@ export class GameBoard {
     if (target) {
       if (target.profession === Professions.Pawn) {
         this.checkRush(options, target, 1, 0, 1)
-        this.checkEnemy(options, target, -1, 1)
+        this.checkEnemy(options, target, 1, -1)
         this.checkEnemy(options, target, 1, 1)
-        this.checkRun(options, target)
+        // this.checkRun(options, target) disabled due to lack of auto adjustment
         this.checkLeap(options, target)
       } else if (target.profession === Professions.King) {
         this.checkNoneOrEnemy(options, target, 0, 1)

@@ -63,11 +63,9 @@ onUnmounted(() => {
 })
 
 const handleAI = () => {
-  const action = board.value.simpleAI()
+  const action = board.value.complexAI()
   if (action) {
-    console.log(action.fromX, action.fromY, action.toX, action.toY)
     board.value.movePiece(action.fromX, action.fromY, action.toX, action.toY)
-    console.log(`piece_${action.id}`)
     document.getElementById(`piece_${action.id}`)?.animate(
       [
         // keyframes
