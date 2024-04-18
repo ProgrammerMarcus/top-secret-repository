@@ -2,7 +2,7 @@
 defineProps({
   image: String,
   name: String,
-  id: Number
+  id: String
 })
 </script>
 
@@ -24,6 +24,7 @@ defineProps({
   height: 10rem;
   aspect-ratio: 1;
   object-fit: cover;
+  image-rendering: auto;
 }
 
 .name {

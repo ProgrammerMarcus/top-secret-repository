@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { classic } from '@/assets/code/maps/classic'
 import { classicPlus } from '@/assets/code/maps/classicPlus'
+import { ambush } from '@/assets/code/maps/ambush'
 import MapOption from './MapOption.vue'
+import { islands } from '@/assets/code/maps/islands'
+import { bridge } from '@/assets/code/maps/bridge'
+import { duel } from '@/assets/code/maps/duel'
 
-const maps = [classic, classicPlus]
+const maps = [classic, classicPlus, ambush, islands, bridge, duel]
 </script>
 
 <template>
@@ -43,5 +47,7 @@ const maps = [classic, classicPlus]
   flex-direction: row;
   flex-wrap: wrap;
   gap: 20px;
+  max-width: 600px;
+  margin: auto;
 }
 </style>

@@ -13,6 +13,8 @@ import knightBlack from '@/assets/pieces/stranger_b.webp'
 import knightWhite from '@/assets/pieces/captain_w.webp'
 import rookBlack from '@/assets/pieces/metal_b.webp'
 import rookWhite from '@/assets/pieces/shady_w.webp'
+import axeWhite from '@/assets/pieces/dwarf_1.webp'
+import axeBlack from '@/assets/pieces/crystal_mauler_1.webp'
 import { Professions, Teams } from '../enums'
 
 /**
@@ -78,6 +80,12 @@ export class GamePiece {
         this.image = rookWhite
       } else if (this.team === Teams.Black) {
         this.image = rookBlack
+      }
+    } else if (profession === Professions.Axeman) {
+      if (this.team === Teams.White) {
+        this.image = axeWhite
+      } else if (this.team === Teams.Black) {
+        this.image = axeBlack
       }
     }
   }

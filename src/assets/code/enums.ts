@@ -10,7 +10,10 @@ export enum Types {
   Log,
   Stone,
   WaterStoneMiddle,
-  WaterStoneCorner
+  WaterStoneCorner,
+  TreeTop,
+  TreeBottom,
+  StoneCorner
 }
 
 /**
@@ -31,7 +34,8 @@ export enum Professions {
   Queen = 50,
   Bishop = 27,
   Knight = 25,
-  Rook = 30
+  Rook = 30,
+  Axeman = 20
 }
 
 /**

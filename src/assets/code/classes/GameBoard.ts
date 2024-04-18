@@ -379,6 +379,15 @@ export class GameBoard {
         this.checkDirection(options, target, 0, 1)
         this.checkDirection(options, target, -1, 0)
         this.checkDirection(options, target, 0, -1)
+      } else if (target.profession === Professions.Axeman) {
+        this.checkNoneOrEnemy(options, target, 0, 1)
+        this.checkEnemy(options, target, 1, 1)
+        this.checkNoneOrEnemy(options, target, 1, 0)
+        this.checkNoneOrEnemy(options, target, 0, -1)
+        this.checkNoneOrEnemy(options, target, -1, 0)
+        this.checkEnemy(options, target, -1, 1)
+        this.checkEnemy(options, target, -1, -1)
+        this.checkEnemy(options, target, 1, -1)
       }
       for (const option of options) {
         if (option) option.highlight = true

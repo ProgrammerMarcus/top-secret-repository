@@ -13,9 +13,6 @@ function exit(): void {
 </template>
 
 <style scoped>
-.quit {
-}
-
 .link {
   color: rgba(0, 0, 0, 0.7);
   transition: 0.2s;

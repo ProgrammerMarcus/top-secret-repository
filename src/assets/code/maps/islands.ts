@@ -3,15 +3,15 @@ import type { GameMap } from '@/assets/code/types/GameMap'
 import { Types, Professions, Teams } from '@/assets/code/enums'
 import mapImage from '@/assets/menu/maps/classic.webp'
 
-export const classic: GameMap = {
+export const islands: GameMap = {
   image: mapImage,
-  name: 'Classic',
-  identifier: '1',
+  name: 'Islands',
+  identifier: '4',
   generate: function (): GameBoard {
     const board = new GameBoard(8, 8)
     for (let x = 1; x <= board.width; x++) {
       for (let y = 1; y <= board.height; y++) {
-        if ((x % 2 === 0 && y % 2 !== 0) || (x % 2 !== 0 && y % 2 === 0)) {
+        if ((x % 5 === 0 && y % 2 !== 0) || (x % 2 !== 0 && y % 2 === 0)) {
           board.addTile(x, y)
         } else {
           board.addTile(x, y, Types.Stone)

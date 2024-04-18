@@ -7,18 +7,35 @@ import { GamePiece } from '@/assets/code/classes/GamePiece'
 import { classicPlus } from '@/assets/code/maps/classicPlus'
 import { classic } from '@/assets/code/maps/classic'
 import { useRoute } from 'vue-router'
+import { ambush } from '@/assets/code/maps/ambush'
+import { duel } from '@/assets/code/maps/duel'
+import { bridge } from '@/assets/code/maps/bridge'
+import { islands } from '@/assets/code/maps/islands'
 
 const map = useRoute().params.map
 let loaded
 
 switch (map) {
-  case '1':
+  case classic.identifier:
     loaded = classic.generate()
     break
-  case '2':
+  case classicPlus.identifier:
+    loaded = classicPlus.generate()
+    break
+  case ambush.identifier:
+    loaded = ambush.generate()
+    break
+  case duel.identifier:
+    loaded = classicPlus.generate()
+    break
+  case islands.identifier:
+    loaded = classicPlus.generate()
+    break
+  case bridge.identifier:
     loaded = classicPlus.generate()
     break
   default:
+    console.error('unknown map, using default')
     loaded = classic.generate()
 }
 
@@ -170,7 +187,11 @@ const showMoves = (x: number, y: number) => {
   background-color: rgb(99, 155, 255);
   height: 100svh;
   width: 100svw;
+  grid-template: min-content / min-content;
+  place-content: center;
   .tiles {
+    border-right: 2px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.5);
     position: relative;
     top: 0;
     left: 0;
@@ -182,6 +203,9 @@ const showMoves = (x: number, y: number) => {
     );
     .tile {
       height: v-bind('`${size}px`');
+      border-top: 1px solid rgba(0, 0, 0, 0.5);
+      border-left: 1px solid rgba(0, 0, 0, 0.5);
+      box-sizing: content-box;
     }
     .tile.highlight {
       animation: 0.5s infinite alternate highlight;
