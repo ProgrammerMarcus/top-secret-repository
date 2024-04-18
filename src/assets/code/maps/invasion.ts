@@ -1,26 +1,25 @@
 import { GameBoard } from '@/assets/code/classes/GameBoard'
 import type { GameMap } from '@/assets/code/types/GameMap'
-import { Types, Professions, Teams } from '@/assets/code/enums'
-import mapImage from '@/assets/menu/maps/classic.webp'
+import { Professions, Teams } from '@/assets/code/enums'
+import mapImage from '@/assets/menu/maps/invasion.webp'
 
-export const bridge: GameMap = {
+export const invasion: GameMap = {
   image: mapImage,
-  name: 'Bridge',
+  name: 'Invasion',
   identifier: '6',
   generate: function (): GameBoard {
     const board = new GameBoard(8, 8)
     for (let x = 1; x <= board.width; x++) {
       for (let y = 1; y <= board.height; y++) {
-        if ((x % 8 === 0 && y % 2 !== 0) || (x % 2 !== 0 && y % 2 === 0)) {
-          board.addTile(x, y)
-        } else {
-          board.addTile(x, y, Types.Stone)
-        }
+        board.addTile(x, y)
       }
     }
 
     for (let i = 0; i < 8; i++) {
-      board.addPiece(2, i + 1, Teams.Black, Professions.Pawn)
+      board.addPiece(2, i + 1, Teams.Black, Professions.Axeman)
+    }
+    for (let i = 0; i < 8; i++) {
+      board.addPiece(3, i + 1, Teams.Black, Professions.Axeman)
     }
     board.addPiece(1, 4, Teams.Black, Professions.King)
     board.addPiece(1, 1, Teams.Black, Professions.Rook)
@@ -32,7 +31,10 @@ export const bridge: GameMap = {
     board.addPiece(1, 2, Teams.Black, Professions.Knight)
 
     for (let i = 0; i < 8; i++) {
-      board.addPiece(7, i + 1, Teams.White, Professions.Pawn)
+      board.addPiece(7, i + 1, Teams.White, Professions.Axeman)
+    }
+    for (let i = 0; i < 8; i++) {
+      board.addPiece(6, i + 1, Teams.White, Professions.Axeman)
     }
     board.addPiece(8, 4, Teams.White, Professions.King)
     board.addPiece(8, 1, Teams.White, Professions.Rook)

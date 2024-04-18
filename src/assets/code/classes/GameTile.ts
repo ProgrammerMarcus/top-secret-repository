@@ -68,7 +68,7 @@ export class GameTile {
       case Types.Bush:
         this.image = bush
         break
-      case Types.StoneCorner:
+      case Types.stoneMiddle:
         this.image = stoneMiddle
         break
       default:

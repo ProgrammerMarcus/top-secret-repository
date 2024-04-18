@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import GameOver from './GameOver.vue'
-import QuitGame from './QuitGame.vue'
 import { Teams } from '../assets/code/enums'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { GamePiece } from '@/assets/code/classes/GamePiece'
@@ -9,8 +8,8 @@ import { classic } from '@/assets/code/maps/classic'
 import { useRoute } from 'vue-router'
 import { ambush } from '@/assets/code/maps/ambush'
 import { duel } from '@/assets/code/maps/duel'
-import { bridge } from '@/assets/code/maps/bridge'
-import { islands } from '@/assets/code/maps/islands'
+import { invasion } from '@/assets/code/maps/invasion'
+import { mines } from '@/assets/code/maps/mines'
 
 const map = useRoute().params.map
 let loaded
@@ -26,13 +25,13 @@ switch (map) {
     loaded = ambush.generate()
     break
   case duel.identifier:
-    loaded = classicPlus.generate()
+    loaded = duel.generate()
     break
-  case islands.identifier:
-    loaded = classicPlus.generate()
+  case mines.identifier:
+    loaded = mines.generate()
     break
-  case bridge.identifier:
-    loaded = classicPlus.generate()
+  case invasion.identifier:
+    loaded = invasion.generate()
     break
   default:
     console.error('unknown map, using default')
@@ -170,7 +169,6 @@ const showMoves = (x: number, y: number) => {
     </div>
   </div>
   <GameOver v-if="board.gameOver" :team="board.turn" />
-  <QuitGame class="quit" />
 </template>
 
 <style scoped>
@@ -183,8 +181,8 @@ const showMoves = (x: number, y: number) => {
   }
 }
 .board {
+  background-color: black;
   display: grid;
-  background-color: rgb(99, 155, 255);
   height: 100svh;
   width: 100svw;
   grid-template: min-content / min-content;
@@ -245,10 +243,5 @@ const showMoves = (x: number, y: number) => {
       animation: 0.5s infinite alternate highlight;
     }
   }
-}
-.quit {
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 </style>

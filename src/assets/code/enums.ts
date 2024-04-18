@@ -13,7 +13,7 @@ export enum Types {
   WaterStoneCorner,
   TreeTop,
   TreeBottom,
-  StoneCorner
+  stoneMiddle
 }
 
 /**

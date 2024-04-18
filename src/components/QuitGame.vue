@@ -7,21 +7,20 @@ function exit(): void {
 </script>
 
 <template>
-  <div class="quit">
-    <button type="button" class="link" @click="exit">QUIT</button>
-  </div>
+  <button type="button" class="link" @click="exit">EXIT</button>
 </template>
 
 <style scoped>
 .link {
-  color: rgba(0, 0, 0, 0.7);
+  color: white;
   transition: 0.2s;
-  font-size: 1.7rem;
+  font-size: 3rem;
   background-color: rgba(0, 0, 0, 0);
   outline: none;
   border: none;
   font-family: 'Silkscreen';
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .link:hover {

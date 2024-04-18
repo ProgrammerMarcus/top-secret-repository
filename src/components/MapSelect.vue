@@ -3,11 +3,11 @@ import { classic } from '@/assets/code/maps/classic'
 import { classicPlus } from '@/assets/code/maps/classicPlus'
 import { ambush } from '@/assets/code/maps/ambush'
 import MapOption from './MapOption.vue'
-import { islands } from '@/assets/code/maps/islands'
-import { bridge } from '@/assets/code/maps/bridge'
+import { mines } from '@/assets/code/maps/mines'
+import { invasion } from '@/assets/code/maps/invasion'
 import { duel } from '@/assets/code/maps/duel'
 
-const maps = [classic, classicPlus, ambush, islands, bridge, duel]
+const maps = [classic, classicPlus, ambush, mines, invasion, duel]
 </script>
 
 <template>
