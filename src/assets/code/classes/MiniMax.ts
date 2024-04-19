@@ -42,11 +42,18 @@ function findChildren(parent: AINode): AINode[] {
       })
     }
   }
+  const gameOvers = children.filter((c) => c.board.gameOver)
+  if (gameOvers.length) {
+    return gameOvers
+  }
   return children
 }
 
+/**
+ * Needs to add pruning to improve memory usage
+ */
 function miniMax(parent: AINode, depth: number, limit: number, max: boolean): AINode[] {
-  if (depth !== limit && !parent.board.gameOver) {
+  if (depth !== limit) {
     parent.children = findChildren(parent)
     for (const child of parent.children) {
       miniMax(child, depth + 1, limit, !max)
@@ -77,7 +84,7 @@ export function runMiniMax(board: GameBoard): AIAction | null {
   const result = miniMax(
     { score: 0, board: board, children: [], parent: null, fromX: 0, fromY: 0, toX: 0, toY: 0 },
     0,
-    4,
+    2, // 4 or more seems to cause frequent out of memory error, 3 is risky but also dumb for some reason
     true
   )
   console.log(result)

@@ -80,11 +80,7 @@ const handleAI = () => {
         iterations: 1
       }
     )
-    if (!board.value.gameOver) {
-      board.value.turn = -board.value.turn
-    }
-  } else {
-    console.error('AI is confused?')
+    board.value.turn = -board.value.turn
   }
 }
 
@@ -110,7 +106,7 @@ const handleMove = (toX: number, toY: number) => {
     active = undefined
     if (!board.value.gameOver) {
       board.value.turn = -board.value.turn
-      handleAI()
+      window.setTimeout(handleAI, 200)
     }
   } else {
     active = undefined
@@ -166,7 +162,7 @@ const showMoves = (x: number, y: number) => {
       />
     </div>
   </div>
-  <GameOver v-if="board.gameOver" :team="board.turn" />
+  <GameOver v-if="board.gameOver" :team="-board.turn" />
 </template>
 
 <style scoped>
