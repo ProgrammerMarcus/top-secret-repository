@@ -184,7 +184,7 @@ const showMoves = (x: number, y: number) => {
   grid-template: min-content / min-content;
   place-content: center;
   .menu {
-    height: 40px;
+    height: auto;
   }
   .tiles {
     border-right: 2px solid rgba(0, 0, 0, 0.5);
