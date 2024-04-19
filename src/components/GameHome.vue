@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import DifficultySelect from './DifficultySelect.vue'
 import MapSelect from './MapSelect.vue'
-import title from '@/assets/menu/title.webp'
+import title from '@/assets/menu/title_old.webp'
 </script>
 
 <template>
@@ -62,6 +62,6 @@ import title from '@/assets/menu/title.webp'
 .title {
   width: 100%;
   max-width: 100%;
-  min-height: 4rem;
+  max-height: 4.5rem;
 }
 </style>

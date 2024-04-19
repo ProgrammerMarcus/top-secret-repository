@@ -38,7 +38,7 @@ function changeDifficulty(to: number) {
   display: grid;
   place-content: center;
   grid-template: 1fr / min-content min-content min-content;
-  gap: 20px;
+  gap: 10px;
 }
 .btn {
   background-image: url(/src/assets/menu/stone.webp);

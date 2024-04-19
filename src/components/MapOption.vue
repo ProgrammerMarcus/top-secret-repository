@@ -29,16 +29,19 @@ defineProps({
 
 .name {
   text-decoration: none;
-  font-size: 1.7rem;
+  font-size: 1.3rem;
+  text-align: center;
 }
 
 .link {
   color: rgb(255, 0, 255);
   transition: 0.2s;
-  font-size: 1.7rem;
+  font-size: 1.6rem;
+  text-align: center;
+  margin-top: -10px;
 }
 
 .link:hover {
-  color: rgb(255, 100, 255);
+  color: rgb(255, 120, 255);
 }
 </style>

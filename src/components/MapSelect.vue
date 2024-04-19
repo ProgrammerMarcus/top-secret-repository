@@ -12,7 +12,7 @@ const maps = [classic, classicPlus, ambush, mines, invasion, duel]
 
 <template>
   <div class="container">
-    <h2 class="info">Maps:</h2>
+    <h2 class="info">{{ `Maps (${maps.length}):` }}</h2>
     <div class="options">
       <MapOption
         v-for="map of maps"
@@ -27,9 +27,10 @@ const maps = [classic, classicPlus, ambush, mines, invasion, duel]
 
 <style scoped>
 .info {
-  font-size: 2.3rem;
+  font-size: 2.1rem;
   font-family: 'SilkscreenBold';
   text-align: center;
+  margin-bottom: 5px;
 }
 
 .container {
@@ -38,9 +39,11 @@ const maps = [classic, classicPlus, ambush, mines, invasion, duel]
   box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
   padding: 5px 3px 40px 3px;
   max-width: calc(100svw - 60px);
-  margin: auto;
+  margin: 10px auto;
   width: 720px;
   border: 1px solid black;
+  overflow: auto;
+  max-height: 70svh;
 }
 
 .options {
