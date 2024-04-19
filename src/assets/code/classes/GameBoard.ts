@@ -1,8 +1,9 @@
-import { Areas, Professions, Teams, Types } from '../enums'
+import { Areas, Difficulties, Professions, Teams, Types } from '../enums'
 import { GameTile } from './GameTile'
 import { GamePiece } from './GamePiece'
 import type { AIAction } from './AIAction'
 import { runMiniMax } from './MiniMax'
+import { config } from '@/assets/code/config'
 
 /**
  * Contains the state of the game and methods for manipulating the board
@@ -122,10 +123,28 @@ export class GameBoard {
     return clone
   }
 
+  /**
+   * Runs the ai on this board.
+   * @returns An AIAction to be processed
+   */
   complexAI = (): AIAction | null => {
-    return runMiniMax(this)
+    if (config.difficulty === Difficulties.Easy) {
+      console.log('AI running on easy mode.')
+      return runMiniMax(this, 1)
+    } else if (config.difficulty === Difficulties.Normal) {
+      console.log('AI running on normal mode.')
+      return runMiniMax(this, 2)
+    } else {
+      console.log('AI defaulting to running on easy mode.')
+      return runMiniMax(this, 2)
+    }
   }
 
+  /**
+   * Runs a simple AI on this board.
+   * @deprecated Outdated simple AI, use complexAI instead.
+   * @returns An AI action to be processed.
+   */
   simpleAI = (): AIAction | null => {
     const clone = this.cloneBoard(this)
     let bestList: AIAction[] = []

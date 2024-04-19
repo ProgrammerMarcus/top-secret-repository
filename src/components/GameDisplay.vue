@@ -10,6 +10,7 @@ import { ambush } from '@/assets/code/maps/ambush'
 import { duel } from '@/assets/code/maps/duel'
 import { invasion } from '@/assets/code/maps/invasion'
 import { mines } from '@/assets/code/maps/mines'
+import GameMenu from './GameMenu.vue'
 
 const map = useRoute().params.map
 let loaded
@@ -42,15 +43,15 @@ const board = ref(loaded)
 let active: undefined | GamePiece = undefined
 const size = ref(
   Math.min(
-    Math.floor((window.innerHeight - 10) / board.value.height),
-    Math.floor((window.innerWidth - 10) / board.value.width)
+    Math.floor((window.innerHeight - 40) / board.value.height),
+    Math.floor((window.innerWidth - 40) / board.value.width)
   )
 )
 
 const updateSize = () => {
   size.value = Math.min(
-    Math.floor((window.innerHeight - 10) / board.value.height),
-    Math.floor((window.innerWidth - 10) / board.value.width)
+    Math.floor((window.innerHeight - 40) / board.value.height),
+    Math.floor((window.innerWidth - 40) / board.value.width)
   )
 }
 
@@ -128,6 +129,7 @@ const showMoves = (x: number, y: number) => {
 
 <template>
   <div class="board">
+    <GameMenu class="menu" />
     <div class="tiles">
       <img
         v-for="(tile, index) in board.tiles"
@@ -181,6 +183,9 @@ const showMoves = (x: number, y: number) => {
   width: 100svw;
   grid-template: min-content / min-content;
   place-content: center;
+  .menu {
+    height: 40px;
+  }
   .tiles {
     border-right: 2px solid rgba(0, 0, 0, 0.5);
     border-bottom: 2px solid rgba(0, 0, 0, 0.5);
@@ -189,7 +194,7 @@ const showMoves = (x: number, y: number) => {
     left: 0;
     display: grid;
     place-content: center;
-    grid-area: 1 / 1;
+    grid-area: 2 / 1;
     grid-template: v-bind(
       '`repeat(${board.height}, ${size}px) / repeat(${board.width}, ${size}px)`'
     );
@@ -210,7 +215,7 @@ const showMoves = (x: number, y: number) => {
     display: grid;
     place-content: center;
     pointer-events: none;
-    grid-area: 1 / 1;
+    grid-area: 2 / 1;
     grid-template: v-bind(
       '`repeat(${board.height}, ${size}px) / repeat(${board.width}, ${size}px)`'
     );

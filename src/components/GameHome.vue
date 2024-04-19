@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import DifficultySelect from './DifficultySelect.vue'
 import MapSelect from './MapSelect.vue'
 import title from '@/assets/menu/title.webp'
 </script>
@@ -7,10 +8,7 @@ import title from '@/assets/menu/title.webp'
   <div class="home">
     <main class="menu">
       <h1 class="header"><img :src="title" alt="CHESS 5" class="title" /></h1>
-      <div class="difficulty">
-        <button class="btn" type="button">EASY</button>
-        <button class="btn" type="button">NORMAL</button>
-      </div>
+      <DifficultySelect />
       <MapSelect />
     </main>
   </div>

@@ -80,14 +80,19 @@ function miniMax(parent: AINode, depth: number, limit: number, max: boolean): AI
   return parent.children
 }
 
-export function runMiniMax(board: GameBoard): AIAction | null {
+/**
+ * Runs the miniMax algorithm and returns an action based on it.
+ * @param board The board to determine the action for.
+ * @param depth The depth of the algorithm, 2 is recommended to prevent errors
+ * @returns An AIAction that can be processed on the board.
+ */
+export function runMiniMax(board: GameBoard, depth: number = 2): AIAction | null {
   const result = miniMax(
     { score: 0, board: board, children: [], parent: null, fromX: 0, fromY: 0, toX: 0, toY: 0 },
     0,
-    2, // 4 or more seems to cause frequent out of memory error, 3 is risky but also dumb for some reason
+    depth, // 4 or more seems to cause frequent out of memory error, 3 is risky but also dumb for some reason
     true
   )
-  console.log(result)
   const top = result.reduce((a, b) => {
     if (a.score > b.score) {
       return a
@@ -95,7 +100,6 @@ export function runMiniMax(board: GameBoard): AIAction | null {
       return b
     }
   })
-  console.log(top)
   const target = board.getPiece(top.fromX, top.fromY)
   if (target) return new AIAction(target.id, top.fromX, top.fromY, top.toX, top.toY, top.score)
   else return null

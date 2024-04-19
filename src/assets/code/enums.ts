@@ -1,3 +1,8 @@
+export enum Difficulties {
+  Easy,
+  Normal
+}
+
 /**
  * Types of tiles
  */
