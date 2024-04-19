@@ -8,17 +8,24 @@ import { runMiniMax } from './MiniMax'
  * Contains the state of the game and methods for manipulating the board
  */
 export class GameBoard {
-  turn: Teams = Teams.White
+  turn: Teams
   width
   height
   tiles: GameTile[]
   pieces: GamePiece[]
   gameOver: boolean = false
-  constructor(width: number, height: number, tiles: GameTile[] = [], pieces: GamePiece[] = []) {
+  constructor(
+    width: number,
+    height: number,
+    tiles: GameTile[] = [],
+    pieces: GamePiece[] = [],
+    turn: Teams = Teams.White
+  ) {
     this.width = width
     this.height = height
     this.tiles = tiles
     this.pieces = pieces
+    this.turn = turn
   }
   /**
    * Get a tile at x y
@@ -105,7 +112,7 @@ export class GameBoard {
 
   cloneBoard = (source: GameBoard = this) => {
     // "copy" is required due to vue proxy
-    const clone: GameBoard = new GameBoard(this.width, this.height, [], [])
+    const clone: GameBoard = new GameBoard(this.width, this.height, [], [], this.turn)
     clone.tiles = [...source.tiles].map((t) => {
       return new GameTile(t.x, t.y, t.type, t.area, t.rotate)
     })
