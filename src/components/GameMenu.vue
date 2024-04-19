@@ -69,7 +69,7 @@ let modalOn = ref(false)
       background-size: 64px;
       box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
       padding: 5px;
-      max-width: calc(100svw - 60px);
+      max-width: calc(100lvw - 60px);
       margin: auto;
       color: white;
       width: 6rem;

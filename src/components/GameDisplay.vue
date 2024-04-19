@@ -179,8 +179,8 @@ const showMoves = (x: number, y: number) => {
 .board {
   background-color: black;
   display: grid;
-  height: 100svh;
-  width: 100svw;
+  height: 100lvh;
+  width: 100lvw;
   grid-template: min-content / min-content;
   place-content: center;
   .menu {

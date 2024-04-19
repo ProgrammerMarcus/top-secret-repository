@@ -38,7 +38,7 @@ const maps = [classic, classicPlus, ambush, mines, invasion, duel]
   background-size: 128px;
   box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
   padding: 5px 3px 40px 3px;
-  max-width: calc(100svw - 60px);
+  max-width: calc(100lvw - 60px);
   margin: 10px auto;
   width: 720px;
   border: 1px solid black;

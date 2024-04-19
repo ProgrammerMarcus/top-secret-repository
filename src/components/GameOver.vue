@@ -16,22 +16,22 @@ defineProps({
 <style scoped>
 @keyframes appear {
   from {
-    width: 1svw;
+    width: 1lvw;
   }
   to {
-    width: 30svw;
+    width: 30lvw;
   }
 }
 .game-over {
   display: grid;
   place-content: center;
   position: absolute;
-  top: calc(50% - 12svh);
-  right: calc(50% - 15svw);
-  width: 30svw;
-  font-size: 4svw;
+  top: calc(50% - 12lvh);
+  right: calc(50% - 15lvw);
+  width: 30lvw;
+  font-size: 4lvw;
   text-align: center;
-  height: 24svh;
+  height: 24lvh;
   box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.3);
   animation: 0.5s 1 forwards appear;
   text-wrap: nowrap;
