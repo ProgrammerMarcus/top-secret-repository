@@ -20,26 +20,26 @@ import title from '@/assets/menu/title_old.webp'
     background-position: 0px 0px;
   }
   20% {
-    background-position: -30lvh -30lvw;
+    background-position: -30vh -30vw;
   }
   40% {
-    background-position: -10lvh -50lvw;
+    background-position: -10vh -50vw;
   }
   60% {
-    background-position: -100lvh -100lvw;
+    background-position: -100vh -100vw;
   }
   80% {
-    background-position: -50lvh -30lvw;
+    background-position: -50vh -30vw;
   }
   100% {
-    background-position: -10lvh -50lvw;
+    background-position: -10vh -50vw;
   }
 }
 .home {
   background-image: url(/src/assets/menu/background.webp);
-  background-size: 300lvh;
-  min-width: 100lvw;
-  min-height: 100lvh;
+  background-size: 300vh;
+  min-width: 100vw;
+  min-height: 100vh;
   animation: 40s infinite alternate linear hover;
   background-repeat: no-repeat;
   display: grid;
