@@ -163,8 +163,8 @@ const showMoves = (x: number, y: number) => {
         @click="showMoves(piece.x, piece.y)"
       />
     </div>
+    <GameOver class="game-over" v-if="board.gameOver" :team="-board.turn" />
   </div>
-  <GameOver v-if="board.gameOver" :team="-board.turn" />
 </template>
 
 <style scoped>
@@ -241,6 +241,13 @@ const showMoves = (x: number, y: number) => {
     .piece.selected {
       animation: 0.5s infinite alternate highlight;
     }
+  }
+  .game-over {
+    position: relative;
+    top: 0;
+    left: 0;
+    grid-area: 2 / 1;
+    z-index: 9999;
   }
 }
 </style>
