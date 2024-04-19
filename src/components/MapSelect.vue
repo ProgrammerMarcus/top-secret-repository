@@ -43,7 +43,7 @@ const maps = [classic, classicPlus, ambush, mines, invasion, duel]
   width: 720px;
   border: 1px solid black;
   overflow: auto;
-  max-height: 70svh;
+  max-height: 70vh;
 }
 
 .options {

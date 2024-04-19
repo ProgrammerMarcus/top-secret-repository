@@ -21,7 +21,7 @@ defineProps({
   margin: auto;
 }
 .image {
-  height: 10rem;
+  height: 25vh;
   aspect-ratio: 1;
   object-fit: cover;
   image-rendering: auto;
